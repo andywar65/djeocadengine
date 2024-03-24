@@ -1,0 +1,9 @@
+django>=5.0,<6.0
+django-htmx
+django-geojson
+jsonfield
+django-leaflet
+ezdxf
+django-colorfield
+pyproj
+shapely
