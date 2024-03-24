@@ -1,3 +1,9 @@
 from django.contrib import admin  # noqa
+from leaflet.admin import LeafletGeoAdmin
 
-# Register your models here.
+from .models import Drawing
+
+
+@admin.register(Drawing)
+class DrawingAdmin(LeafletGeoAdmin):
+    list_display = ("title",)
