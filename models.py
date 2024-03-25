@@ -1,3 +1,4 @@
+from colorfield.fields import ColorField
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -54,3 +55,35 @@ class Drawing(models.Model):
     class Meta:
         verbose_name = _("Drawing")
         verbose_name_plural = _("Drawings")
+
+
+class Layer(models.Model):
+
+    drawing = models.ForeignKey(
+        Drawing,
+        on_delete=models.CASCADE,
+        related_name="related_layers",
+        verbose_name=_("Drawing"),
+    )
+    name = models.CharField(
+        _("Layer name"),
+        max_length=50,
+    )
+    color_field = ColorField(default="#FFFFFF")
+    linetype = models.BooleanField(
+        _("Continuous linetype"),
+        default=True,
+    )
+
+    class Meta:
+        verbose_name = _("Layer")
+        verbose_name_plural = _("Layers")
+        ordering = (
+            "drawing",
+            "name",
+        )
+        constraints = [
+            models.UniqueConstraint(
+                fields=["drawing", "name"], name="unique_layer_name"
+            ),
+        ]
