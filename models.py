@@ -2,7 +2,7 @@ from colorfield.fields import ColorField
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from djgeojson.fields import PointField
+from djgeojson.fields import GeometryCollectionField, PointField
 from filer.fields.image import FilerImageField
 
 
@@ -74,16 +74,35 @@ class Layer(models.Model):
         _("Continuous linetype"),
         default=True,
     )
+    is_block = models.BooleanField(
+        default=False,
+        editable=False,
+    )
 
     class Meta:
         verbose_name = _("Layer")
         verbose_name_plural = _("Layers")
-        ordering = (
-            "drawing",
-            "name",
-        )
-        constraints = [
-            models.UniqueConstraint(
-                fields=["drawing", "name"], name="unique_layer_name"
-            ),
-        ]
+        ordering = ("name",)
+
+
+class Entity(models.Model):
+
+    layer = models.ForeignKey(
+        Layer,
+        on_delete=models.CASCADE,
+        related_name="related_entities",
+    )
+    label = models.JSONField(
+        null=True,
+    )
+    data = models.JSONField(
+        null=True,
+    )
+    geom = GeometryCollectionField()
+    insertion = PointField(
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = _("Entity")
+        verbose_name_plural = _("Entities")
