@@ -13,6 +13,14 @@ class Drawing(models.Model):
         help_text=_("Name of the drawing"),
         max_length=50,
     )
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        related_name="parent_drawing",
+        verbose_name=_("Parent Drawing"),
+        null=True,
+        blank=True,
+    )
     image = FilerImageField(
         null=True, blank=True, related_name="drawing_image", on_delete=models.SET_NULL
     )
