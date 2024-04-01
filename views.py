@@ -37,15 +37,20 @@ class DrawingCreateView(PermissionRequiredMixin, HxPageTemplateMixin, CreateView
 
     def get_success_url(self):
         if not self.object.epsg:
-            pass
-            # return reverse(
-            # "djeocad:drawing_simple_geodata",
-            # kwargs={"pk": self.object.id},
-            # )
+            return reverse(
+                "djeocadengine:drawing_geodata",
+                kwargs={"pk": self.object.id},
+            )
         return reverse(
             "djeocadengine:drawing_detail",
             kwargs={"pk": self.object.id},
         )
+
+
+class DrawingGeodataView(PermissionRequiredMixin, HxPageTemplateMixin, DetailView):
+    model = Drawing
+    permission_required = "djeocad.change_drawing"
+    template_name = "djeocadengine/htmx/drawing_geodata.html"
 
 
 class DrawingDetailView(HxPageTemplateMixin, DetailView):
