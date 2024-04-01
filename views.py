@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
 from django.views.generic import CreateView
+from filer.models import Image
 
 from .forms import DrawingCreateForm
 from .models import Drawing
@@ -20,6 +21,17 @@ class DrawingCreateView(PermissionRequiredMixin, HxPageTemplateMixin, CreateView
     permission_required = "djeocad.add_drawing"
     form_class = DrawingCreateForm
     template_name = "djeocadengine/htmx/drawing_create.html"
+
+    def form_valid(self, form):
+        if form.cleaned_data["temp_image"]:
+            img = Image.objects.create(
+                owner=self.request.user,
+                original_filename=form.cleaned_data["title"],
+                file=form.cleaned_data["temp_image"],
+            )
+            form.instance.image = img
+            form.instance.temp_image = None
+        return super(DrawingCreateView, self).form_valid(form)
 
     def get_success_url(self):
         if not self.object.epsg:
