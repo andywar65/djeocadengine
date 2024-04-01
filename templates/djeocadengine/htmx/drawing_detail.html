@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load thumbnail %}
+
+<div class="card-header">
+  <h4 class="card-title">{% trans "Drawing"%}: {{ object.title }}</h4>
+</div>
+{% if object.image %}
+  <img src="{% thumbnail object.image 240x240 crop %}" class="card-img-top">
+{% endif %}
+<div class="card-body">
+  <ul>
+    <li>
+    </li>
+    <li>
+    </li>
+  </ul>
+</div>
+<div class="card-footer">
+</div>
+{% include "djeocadengine/includes/map_data.html" %}

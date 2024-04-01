@@ -7,8 +7,10 @@ from colorfield.fields import ColorField
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from djgeojson.fields import GeometryCollectionField, PointField
+from easy_thumbnails.files import get_thumbnailer
 from ezdxf.lldxf.const import InvalidGeoDataException
 from filer.fields.image import FilerImageField
 from pyproj import Transformer
@@ -91,6 +93,24 @@ class Drawing(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def popupContent(self):
+        url = reverse(
+            "djeocad:drawing_detail",
+            kwargs={"pk": self.id},
+        )
+        title_str = '<h5><a href="%(url)s">%(title)s</a></h5>' % {
+            "title": self.title,
+            "url": url,
+        }
+        image = self.image
+        if not image:
+            return {"content": title_str}
+        thumbnailer = get_thumbnailer(image)
+        thumb = thumbnailer.get_thumbnail({"size": (256, 256), "crop": True})
+        image_str = '<img src="%(image)s">' % {"image": thumb.url}
+        return {"content": title_str + image_str}
 
     def save(self, *args, **kwargs):
         # save and eventually upload DXF

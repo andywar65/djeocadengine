@@ -1,6 +1,8 @@
+import json
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from filer.models import Image
 
 from .forms import DrawingCreateForm
@@ -41,7 +43,31 @@ class DrawingCreateView(PermissionRequiredMixin, HxPageTemplateMixin, CreateView
             # kwargs={"pk": self.object.id},
             # )
         return reverse(
-            "home"
-            # "djeocad:drawing_detail",
-            # kwargs={"pk": self.object.id},
+            "djeocadengine:drawing_detail",
+            kwargs={"pk": self.object.id},
         )
+
+
+class DrawingDetailView(HxPageTemplateMixin, DetailView):
+    model = Drawing
+    template_name = "djeocadengine/htmx/drawing_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["lines"] = self.object.related_layers.filter(is_block=False)
+        # context["blocks"] = self.object.related_layers.filter(is_block=True)
+        # id_list = context["lines"].values_list("id", flat=True)
+        # context["insertions"] = Insertion.objects.filter(layer_id__in=id_list)
+        context["drawings"] = self.object
+        # context["author_list"] = [_("Author - ") + self.object.user.username]
+        # name_list = context["lines"].values_list("name", flat=True)
+        # context["layer_list"] = list(dict.fromkeys(name_list))
+        # context["layer_list"] = [_("Layer - ") + s for s in context["layer_list"]]
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super(DrawingDetailView, self).dispatch(request, *args, **kwargs)
+        if request.htmx:
+            dict = {"refreshCollections": True}
+            response["HX-Trigger-After-Swap"] = json.dumps(dict)
+        return response
