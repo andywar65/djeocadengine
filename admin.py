@@ -13,6 +13,7 @@ class LayerInline(admin.TabularInline):
 @admin.register(Drawing)
 class DrawingAdmin(LeafletGeoAdmin):
     list_display = ("title",)
+    exclude = ("temp_image",)
     inlines = [
         LayerInline,
     ]

@@ -34,6 +34,7 @@ class Drawing(models.Model):
     image = FilerImageField(
         null=True, blank=True, related_name="drawing_image", on_delete=models.SET_NULL
     )
+    temp_image = models.ImageField(_("Image"), null=True, blank=True)
     dxf = models.FileField(
         _("DXF file"),
         max_length=200,
