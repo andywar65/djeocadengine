@@ -3,12 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 from .views import DrawingCreateView, DrawingDetailView
 
-app_name = "djeocad"
+app_name = "djeocadengine"
 urlpatterns = [
     path(
         _("drawing/add/"),
         DrawingCreateView.as_view(),
-        name="drawing_simple_create",
+        name="drawing_create",
     ),
     path(
         _("drawing/<pk>/"),

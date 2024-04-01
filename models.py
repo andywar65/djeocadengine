@@ -97,7 +97,7 @@ class Drawing(models.Model):
     @property
     def popupContent(self):
         url = reverse(
-            "djeocad:drawing_detail",
+            "djeocadengine:drawing_detail",
             kwargs={"pk": self.id},
         )
         title_str = '<h5><a href="%(url)s">%(title)s</a></h5>' % {
