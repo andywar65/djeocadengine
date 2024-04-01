@@ -19,7 +19,7 @@ class DrawingCreateView(PermissionRequiredMixin, HxPageTemplateMixin, CreateView
     model = Drawing
     permission_required = "djeocad.add_drawing"
     form_class = DrawingCreateForm
-    template_name = "djeocad/htmx/drawing_create.html"
+    template_name = "djeocadengine/htmx/drawing_create.html"
 
     def get_success_url(self):
         if not self.object.epsg:
