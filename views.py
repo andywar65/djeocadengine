@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, UpdateView
 from filer.models import Image
 
-from .forms import DrawingCreateForm, DrawingParentForm
+from .forms import DrawingCreateForm, DrawingManualForm, DrawingParentForm
 from .models import Drawing
 
 
@@ -52,6 +52,19 @@ class DrawingGeodataView(PermissionRequiredMixin, HxPageTemplateMixin, UpdateVie
     permission_required = "djeocadengine.change_drawing"
     template_name = "djeocadengine/htmx/drawing_geodata.html"
     form_class = DrawingParentForm
+
+    def get_success_url(self):
+        return reverse(
+            "djeocadengine:drawing_detail",
+            kwargs={"pk": self.object.id},
+        )
+
+
+class DrawingManualView(PermissionRequiredMixin, HxPageTemplateMixin, UpdateView):
+    model = Drawing
+    permission_required = "djeocadengine.change_drawing"
+    template_name = "djeocadengine/includes/drawing_manual.html"
+    form_class = DrawingManualForm
 
     def get_success_url(self):
         return reverse(

@@ -20,7 +20,10 @@
               script="on click hide #geodata-buttons then show #parent-form">
         {% trans "Parent" %}
       </button>
-      <button>Enter manually</button>
+      <a class="btn btn-primary"
+         href="{% url 'djeocadengine:drawing_manual' pk=object.id %}">
+        {% trans "Enter manually"%}
+      </a>
     </div>
     <div id="parent-form" style="display: none">
       <form method="POST" action="">

@@ -1,7 +1,12 @@
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from .views import DrawingCreateView, DrawingDetailView, DrawingGeodataView
+from .views import (
+    DrawingCreateView,
+    DrawingDetailView,
+    DrawingGeodataView,
+    DrawingManualView,
+)
 
 app_name = "djeocadengine"
 urlpatterns = [
@@ -19,5 +24,10 @@ urlpatterns = [
         _("drawing/<pk>/geodata"),
         DrawingGeodataView.as_view(),
         name="drawing_geodata",
+    ),
+    path(
+        _("drawing/<pk>/manual"),
+        DrawingManualView.as_view(),
+        name="drawing_manual",
     ),
 ]

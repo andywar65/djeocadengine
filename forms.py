@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from leaflet.forms.widgets import LeafletWidget
 
 from djeocadengine.models import Drawing
 
@@ -17,3 +18,19 @@ class DrawingParentForm(ModelForm):
     class Meta:
         model = Drawing
         fields = ["parent"]
+
+
+class DrawingManualForm(ModelForm):
+    class Meta:
+        model = Drawing
+        fields = ["geom", "designx", "designy", "rotation"]
+        widgets = {
+            "geom": LeafletWidget(
+                attrs={
+                    "geom_type": "Point",
+                }
+            )
+        }
+
+    class Media:
+        js = ("djeocad/js/locate_user.js",)

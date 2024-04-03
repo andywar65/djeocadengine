@@ -1,0 +1,43 @@
+{% extends "djeocadengine/base_form.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+  <form method="POST" action="">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col" style="margin-bottom: 20px">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">
+              {% trans "Add GeoData"%}: {{ object }}
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              {% blocktrans %}
+                No Geodata found in DXF, you must insert it manually.
+                On the map draw a marker corresponding to a geolocated DXF point.
+                In X and Y enter the coordinates of this point in DXF units (it defaults to WCS origin).
+                Rotation is the angle you need to rotate the drawing to orient it
+                correctly to True North (angle in degrees, counterclockwise is positive).
+              {% endblocktrans %}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {{ form.designx|as_crispy_field }}
+            {{ form.designy|as_crispy_field }}
+            {{ form.rotation|as_crispy_field }}
+          </div>
+          <div class="card-footer">
+            <input class="btn btn-primary"
+                   type="submit"
+                   value="{% trans 'Add GeoData' %}" />
+          </div>
+        </div>
+      </div>
+      <div class="col col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+        {{ form.geom|as_crispy_field }}
+      </div>
+    </div>
+  </form>
+{% endblock content %}
