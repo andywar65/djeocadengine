@@ -23,13 +23,18 @@
       <button>Enter manually</button>
     </div>
     <div id="parent-form" style="display: none">
-      <form>
+      <form method="POST" action="">
+        {% csrf_token %}
         {{ form|crispy }}
-        <button class="btn-close"
-                title="{% trans 'Dismiss' %}"
-                script="on click hide #parent-form then show #geodata-buttons">
+        <button class="btn btn-primary"
+                type="submit">
+          {% trans 'Add Parent' %}
         </button>
       </form>
+      <button class="btn-close"
+              title="{% trans 'Dismiss' %}"
+              script="on click hide #parent-form then show #geodata-buttons">
+      </button>
     </div>
   </div>
 </div>
