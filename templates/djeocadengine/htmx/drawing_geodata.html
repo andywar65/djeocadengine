@@ -9,13 +9,27 @@
     </h4>
   </div>
   <div class="card-body">
-    <p class="card-text">
-      {% blocktrans %}
-        Your DXF cannot be geolocated. If you already uploaded a Drawing with equal geolocation,
-        click on the Parent button. Otherwise you must manually enter the geolocation.
-      {% endblocktrans %}
-    </p>
-    <button>Parent</button>
-    <button>Enter manually</button>
+    <div id="geodata-buttons">
+      <p class="card-text">
+        {% blocktrans %}
+          Your DXF cannot be geolocated. If you already uploaded a Drawing with equal geolocation,
+          click on the Parent button. Otherwise you must manually enter the geolocation.
+        {% endblocktrans %}
+      </p>
+      <button class="btn btn-primary"
+              script="on click hide #geodata-buttons then show #parent-form">
+        {% trans "Parent" %}
+      </button>
+      <button>Enter manually</button>
+    </div>
+    <div id="parent-form" style="display: none">
+      <form>
+        {{ form|crispy }}
+        <button class="btn-close"
+                title="{% trans 'Dismiss' %}"
+                script="on click hide #parent-form then show #geodata-buttons">
+        </button>
+      </form>
+    </div>
   </div>
 </div>
