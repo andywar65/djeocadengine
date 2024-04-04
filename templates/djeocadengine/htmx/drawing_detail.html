@@ -10,11 +10,19 @@
 <div class="card-body">
   <ul>
     <li>
+      <a class="link link-primary"
+         hx-get="{% url 'djeocadengine:base_list' %}"
+         hx-target="#nav-card"
+         hx-push-url="true">
+        {% trans "Back to list" %}
+      </a>
     </li>
     <li>
+      <a class="link link-primary"
+         href="{% url 'djeocadengine:drawing_update' pk=object.id %}">
+        {% trans "Modify drawing" %}
+      </a>
     </li>
   </ul>
-</div>
-<div class="card-footer">
 </div>
 {% include "djeocadengine/includes/map_data.html" %}

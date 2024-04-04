@@ -4,25 +4,16 @@
   <h4 class="card-title">{% trans "GeoCAD" %}</h4>
 </div>
 <div class="card-body">
-  <h5>{% trans "Authors"%}: </h5>
-  {% if authors %}
-    <ul>
-      {% for author in authors %}
-        <li>
-          <a class="link-primary"
-             hx-get="{% url 'djeocad:author_list' username=author %}"
-             hx-target="#nav-card"
-             hx-push-url="true">
-            {{ author }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
+  {% if drawings %}
+    <p class="card-text">
+      {% blocktrans %}
+        Click on the markers and follow the link
+        to see the drawings.
+      {% endblocktrans %}
+    </p>
   {% else %}
-    <p>{% trans "No authors yet" %}</p>
+    <p>{% trans "No drawings yet" %}</p>
   {% endif %}
-</div>
-<div class="card-footer">
   {% if user.is_authenticated %}
     <a class="btn btn-primary"
        hx-get="{% url 'djeocadengine:drawing_create' %}"
