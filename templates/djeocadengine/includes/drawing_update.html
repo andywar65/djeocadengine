@@ -1,0 +1,57 @@
+{% extends "djeocadengine/base_form.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block content %}
+  <form method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col" style="margin-bottom: 20px">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">
+              {% trans "Update drawing"%}: {{ object }}
+            </h4>
+          </div>
+          <div class="card-body">
+            {% if object.image %}
+              <img class="card-img-top"
+                   src="{% thumbnail object.image 240x240 crop %}"
+                   alt="{{ object.title }}">
+            {% endif %}
+            {{ form.title|as_crispy_field }}
+            {{ form.dxf|as_crispy_field }}
+            {{ form.temp_image|as_crispy_field }}
+            {{ form.designx|as_crispy_field }}
+            {{ form.designy|as_crispy_field }}
+            {{ form.rotation|as_crispy_field }}
+          </div>
+          <div class="card-footer">
+            <input class="btn btn-primary"
+                   style="margin-bottom: 15px;"
+                   type="submit"
+                   value="{% trans 'Update' %}" />
+          </div>
+        </div>
+      </div>
+      <div class="col col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12">
+        {{ form.geom|as_crispy_field }}
+      </div>
+    </div>
+  </form>
+  <div class="row" style="margin-top: 20px">
+    <div class="col col-xl-6 col-lg-6 col-12">
+      <h4>{% trans "Layers" %}</h4>
+      {% for layer in layers %}
+        {% include "djeocad/htmx/layer_inline.html" %}
+      {% endfor %}
+    </div>
+    <div class="col col-xl-6 col-lg-6 col-12">
+      <h4>{% trans "Blocks" %}</h4>
+      {% for layer in blocks %}
+        {% include "djeocad/htmx/layer_inline.html" %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}

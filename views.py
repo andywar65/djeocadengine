@@ -5,7 +5,12 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from filer.models import Image
 
-from .forms import DrawingCreateForm, DrawingManualForm, DrawingParentForm
+from .forms import (
+    DrawingCreateForm,
+    DrawingManualForm,
+    DrawingParentForm,
+    DrawingUpdateForm,
+)
 from .models import Drawing
 
 
@@ -109,3 +114,33 @@ class DrawingDetailView(HxPageTemplateMixin, DetailView):
             dict = {"refreshCollections": True}
             response["HX-Trigger-After-Swap"] = json.dumps(dict)
         return response
+
+
+class DrawingUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = "djeocadengine.change_drawing"
+    model = Drawing
+    form_class = DrawingUpdateForm
+    template_name = "djeocadengine/includes/drawing_update.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["layers"] = self.object.related_layers.filter(is_block=False)
+        context["blocks"] = self.object.related_layers.filter(is_block=True)
+        return context
+
+    def form_valid(self, form):
+        if form.cleaned_data["temp_image"]:
+            img = Image.objects.create(
+                owner=self.request.user,
+                original_filename=form.cleaned_data["title"],
+                file=form.cleaned_data["temp_image"],
+            )
+            form.instance.image = img
+            form.instance.temp_image = None
+        return super(DrawingUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse(
+            "djeocadengine:drawing_detail",
+            kwargs={"pk": self.object.id},
+        )

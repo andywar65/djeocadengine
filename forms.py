@@ -33,4 +33,25 @@ class DrawingManualForm(ModelForm):
         }
 
     class Media:
-        js = ("djeocad/js/locate_user.js",)
+        js = ("djeocadengine/js/locate_user.js",)
+
+
+class DrawingUpdateForm(ModelForm):
+    class Meta:
+        model = Drawing
+        fields = [
+            "title",
+            "dxf",
+            "temp_image",
+            "geom",
+            "designx",
+            "designy",
+            "rotation",
+        ]
+        widgets = {
+            "geom": LeafletWidget(
+                attrs={
+                    "geom_type": "Point",
+                }
+            )
+        }

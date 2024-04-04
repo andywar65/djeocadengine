@@ -7,6 +7,7 @@ from .views import (
     DrawingDetailView,
     DrawingGeodataView,
     DrawingManualView,
+    DrawingUpdateView,
 )
 
 app_name = "djeocadengine"
@@ -31,5 +32,10 @@ urlpatterns = [
         _("drawing/<pk>/manual"),
         DrawingManualView.as_view(),
         name="drawing_manual",
+    ),
+    path(
+        _("drawing/<pk>/update"),
+        DrawingUpdateView.as_view(),
+        name="drawing_update",
     ),
 ]
