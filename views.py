@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from filer.models import Image
 
 from .forms import DrawingCreateForm, DrawingManualForm, DrawingParentForm
@@ -16,6 +16,19 @@ class HxPageTemplateMixin:
         if not self.request.htmx:
             return [self.template_name.replace("htmx/", "")]
         return [self.template_name]
+
+
+class BaseListView(HxPageTemplateMixin, ListView):
+    model = Drawing
+    context_object_name = "drawings"
+    template_name = "djeocadengine/htmx/base_list.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super(BaseListView, self).dispatch(request, *args, **kwargs)
+        if request.htmx:
+            dict = {"refreshCollections": True}
+            response["HX-Trigger-After-Swap"] = json.dumps(dict)
+        return response
 
 
 class DrawingCreateView(PermissionRequiredMixin, HxPageTemplateMixin, CreateView):
