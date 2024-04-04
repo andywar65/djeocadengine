@@ -23,8 +23,14 @@
             {{ form.title|as_crispy_field }}
             {{ form.dxf|as_crispy_field }}
             {{ form.temp_image|as_crispy_field }}
-            {{ form.designx|as_crispy_field }}
-            {{ form.designy|as_crispy_field }}
+            <div class="row">
+              <div class="col">
+                {{ form.designx|as_crispy_field }}
+              </div>
+              <div class="col">
+                {{ form.designy|as_crispy_field }}
+              </div>
+            </div>
             {{ form.rotation|as_crispy_field }}
           </div>
           <div class="card-footer">
