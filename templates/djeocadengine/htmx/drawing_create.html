@@ -11,9 +11,7 @@
   <div class="card-body">
     <form method="POST" action="" enctype="multipart/form-data">
       {% csrf_token %}
-      {{ form.title|as_crispy_field }}
-      {{ form.dxf|as_crispy_field }}
-      {{ form.temp_image|as_crispy_field }}
+      {{ form|crispy }}
       <input class="btn btn-primary"
              type="submit"
              value="{% trans 'Add' %}" />
