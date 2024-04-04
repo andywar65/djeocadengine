@@ -1,0 +1,8 @@
+{% load i18n %}
+
+<div class="alert alert-danger"
+     hx-get="{% url 'djeocadengine:base_list' %}"
+     hx-target="#nav-card"
+     hx-trigger="load delay:300ms">
+  {% trans "Deleting..." %}<span class="spinner-border spinner-border-sm"></span>
+</div>

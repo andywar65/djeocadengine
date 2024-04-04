@@ -1,6 +1,10 @@
 import json
 
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import Http404
+from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from filer.models import Image
@@ -144,3 +148,16 @@ class DrawingUpdateView(PermissionRequiredMixin, UpdateView):
             "djeocadengine:drawing_detail",
             kwargs={"pk": self.object.id},
         )
+
+
+@permission_required("djeocadengine.delete_drawing")
+def drawing_delete_view(request, pk):
+    if not request.htmx:
+        raise Http404("Request without HTMX headers")
+    drawing = get_object_or_404(Drawing, id=pk)
+    drawing.delete()
+    return TemplateResponse(
+        request,
+        "djeocadengine/htmx/drawing_delete.html",
+        {},
+    )

@@ -7,7 +7,8 @@
 {% if object.image %}
   <img src="{% thumbnail object.image 240x240 crop %}" class="card-img-top">
 {% endif %}
-<div class="card-body">
+<div class="card-body"
+     id="nav-card-body">
   <ul>
     <li>
       <a class="link link-primary"
@@ -21,6 +22,14 @@
       <a class="link link-primary"
          href="{% url 'djeocadengine:drawing_update' pk=object.id %}">
         {% trans "Modify drawing" %}
+      </a>
+    </li>
+    <li>
+      <a class="link link-danger"
+         hx-get="{% url 'djeocadengine:drawing_delete' pk=object.id %}"
+         hx-target="#nav-card-body"
+         hx-confirm="{% trans 'Are sure you want to delete this drawing?' %}">
+        {% trans "Delete drawing" %}
       </a>
     </li>
   </ul>
