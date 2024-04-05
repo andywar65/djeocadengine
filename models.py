@@ -86,6 +86,9 @@ class Drawing(models.Model):
     __original_designx = None
     __original_designy = None
     __original_rotation = None
+    layer_blacklist = [
+        "Defpoints",
+    ]
     name_blacklist = ["*Model_Space", "DynamicInputDot"]
     entity_types = [
         "POINT",
@@ -342,6 +345,8 @@ def extract_dxf(drawing):
     m, epsg = geodata.get_crs_transformation(no_checks=True)  # noqa
     # create layers
     for layer in doc.layers:
+        if layer.dxf.name in drawing.layer_blacklist:
+            continue
         if layer.rgb:
             color = cad2hex(layer.rgb)
         else:
