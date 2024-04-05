@@ -238,6 +238,9 @@ class Layer(models.Model):
         default=False,
         editable=False,
     )
+    geom = GeometryCollectionField(
+        null=True,
+    )
 
     class Meta:
         verbose_name = _("Layer")
@@ -251,9 +254,6 @@ class Entity(models.Model):
         Layer,
         on_delete=models.CASCADE,
         related_name="related_entities",
-    )
-    label = models.JSONField(
-        null=True,
     )
     data = models.JSONField(
         null=True,
@@ -445,3 +445,25 @@ def extract_dxf(drawing):
                 "type": "GeometryCollection",
             },
         )
+    # save blocks
+    for block in doc.blocks:
+        if block.name in drawing.name_blacklist:
+            continue
+        geometries = []
+        for e_type in drawing.entity_types:
+            # extract entities
+            for e in block.query(e_type):
+                geo_proxy = get_geo_proxy(e, m, utm2world)
+                if geo_proxy:
+                    geometries.append(geo_proxy.__geo_interface__)
+        # create block as Layer
+        if not geometries == []:
+            Layer.objects.create(
+                drawing_id=drawing.id,
+                name=block.name,
+                geom={
+                    "geometries": geometries,
+                    "type": "GeometryCollection",
+                },
+                is_block=True,
+            )
