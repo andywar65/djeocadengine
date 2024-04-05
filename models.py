@@ -1,5 +1,5 @@
 import json
-from math import atan2, cos, degrees, radians, sin  # noqa
+from math import atan2, cos, degrees, radians, sin
 from pathlib import Path
 
 import ezdxf
@@ -19,7 +19,8 @@ from filer.fields.image import FilerImageField
 from pyproj import Transformer
 from pyproj.aoi import AreaOfInterest
 from pyproj.database import query_utm_crs_info
-from shapely.geometry import Point, shape  # noqa
+from shapely.geometry import Point, shape
+from shapely.geometry.polygon import Polygon
 
 
 class Drawing(models.Model):
@@ -102,6 +103,10 @@ class Drawing(models.Model):
         "ELLIPSE",
         "SPLINE",
         "HATCH",
+    ]
+    text_types = [
+        "MTEXT",
+        "TEXT",
     ]
 
     def __init__(self, *args, **kwargs):
@@ -389,12 +394,45 @@ def extract_dxf(drawing):
         for e in msp.query(e_type):
             geo_proxy = get_geo_proxy(e, m, utm2world)
             if geo_proxy:
-                # TODO catch polygons and see if they include text
-                # TODO then add key/value with 'label'/text
-                # TODO add key/value with area, thickness (height), volume
-                layer_table[e.dxf.layer]["geometries"].append(
-                    geo_proxy.__geo_interface__
-                )
+                if e_type in ["LWPOLYLINE", "POLYLINE"]:
+                    entity_data = {}
+                    # check if it's a true polygon
+                    try:
+                        poly = Polygon(e.vertices_in_wcs())
+                        # look for texts in same layer
+                        for t_type in drawing.text_types:
+                            txts = msp.query(f"{t_type}[layer=='{e.dxf.layer}']")
+                            for t in txts:
+                                point = Point(t.dxf.insert)
+                                # check if text is contained by polygon
+                                if poly.contains(point):
+                                    # handle different type of texts
+                                    if t_type == "TEXT":
+                                        entity_data["text"] = t.dxf.text
+                                    else:
+                                        entity_data["text"] = t.text
+                        entity_data["surface"] = round(poly.area, 2)
+                        entity_data["height"] = e.dxf.thickness
+                        entity_data["perimeter"] = round(poly.length, 2)
+                        entity_data["width"] = e.dxf.const_width
+                        Entity.objects.create(
+                            layer=layer_table[e.dxf.layer]["layer_obj"],
+                            geom={
+                                "geometries": [geo_proxy.__geo_interface__],
+                                "type": "GeometryCollection",
+                            },
+                            data=entity_data,
+                        )
+                    except ValueError:
+                        # not true polygon, add to layer entity
+                        layer_table[e.dxf.layer]["geometries"].append(
+                            geo_proxy.__geo_interface__
+                        )
+                else:
+                    # not polyline, add to layer entity
+                    layer_table[e.dxf.layer]["geometries"].append(
+                        geo_proxy.__geo_interface__
+                    )
     # create layer entities
     for name, layer_data in layer_table.items():
         Entity.objects.create(
