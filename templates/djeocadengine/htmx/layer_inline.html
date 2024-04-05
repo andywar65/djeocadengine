@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div id="layer-{{ layer.id }}" class="card mx-auto" style="margin-bottom: 20px">
+  <div class="card-header" style="background-color: {{ layer.color_field }}">
+
+  </div>
+  <div class="card-body">
+    <p>
+      {% if layer.is_block %}
+        {% trans 'Block' %}: <strong>{{ layer.name }}</strong> -
+      {% else %}
+        {% trans 'Layer' %}: <strong>{{ layer.name }}</strong> -
+      {% endif %}
+      {% trans 'ID' %}: <strong>{{ layer.id }}</strong> -
+      {% trans 'Color' %}: <strong>{{ layer.color_field }}</strong>
+    </p>
+  </div>
+</div>
