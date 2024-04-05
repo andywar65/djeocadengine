@@ -467,3 +467,45 @@ def extract_dxf(drawing):
                 },
                 is_block=True,
             )
+    # extract insertions
+    for ins in msp.query("INSERT"):
+        # filter blacklisted blocks
+        if ins.dxf.name in drawing.name_blacklist:
+            continue
+        point = msp.add_point(ins.dxf.insert)
+        geo_proxy = get_geo_proxy(point, m, utm2world)
+        if geo_proxy:
+            insertion_point = geo_proxy.__geo_interface__
+        geometries = []
+        # 'generator' object has no attribute 'query'
+        for e in ins.virtual_entities():
+            if e.dxftype() in drawing.entity_types:
+                # extract entity
+                geo_proxy = get_geo_proxy(e, m, utm2world)
+                if geo_proxy:
+                    geometries.append(geo_proxy.__geo_interface__)
+        # prepare block data
+        data_ins = {}
+        data_ins["Block"] = ins.dxf.name
+        data_ins["rotation"] = ins.dxf.rotation
+        data_ins["x_scale"] = ins.dxf.xscale
+        data_ins["y_scale"] = ins.dxf.yscale
+        # TODO add an attribute dictionary
+        # check if layer exists
+        if ins.dxf.layer in layer_table:
+            layer_obj = layer_table[ins.dxf.layer]["layer_obj"]
+        else:
+            layer_obj = Layer.objects.create(
+                drawing_id=drawing.id,
+                name=ins.dxf.layer,
+            )
+        # create Insertion
+        Entity.objects.create(
+            data=data_ins,
+            layer=layer_obj,
+            insertion=insertion_point,
+            geom={
+                "geometries": geometries,
+                "type": "GeometryCollection",
+            },
+        )
