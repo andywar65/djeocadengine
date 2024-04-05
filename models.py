@@ -121,17 +121,20 @@ class Drawing(models.Model):
             "djeocadengine:drawing_detail",
             kwargs={"pk": self.id},
         )
-        title_str = '<h5><a href="%(url)s">%(title)s</a></h5>' % {
-            "title": self.title,
-            "url": url,
-        }
+        title_str = (
+            '<a class="link link-primary" href="%(url)s"><strong>%(title)s</strong></a>'
+            % {
+                "title": self.title,
+                "url": url,
+            }
+        )
         image = self.image
         if not image:
             return {"content": title_str}
         thumbnailer = get_thumbnailer(image)
-        thumb = thumbnailer.get_thumbnail({"size": (256, 256), "crop": True})
+        thumb = thumbnailer.get_thumbnail({"size": (256, 192), "crop": True})
         image_str = '<img src="%(image)s">' % {"image": thumb.url}
-        return {"content": title_str + image_str}
+        return {"content": image_str + title_str}
 
     def save(self, *args, **kwargs):
         # save and eventually upload DXF
