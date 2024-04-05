@@ -279,8 +279,14 @@ class Entity(models.Model):
             "id": _("ID"),
             "lid": self.layer.id,
         }
+        data = ""
+        if self.data:
+            data = "<ul>"
+            for k, v in self.data.items():
+                data += f"<li>{k} = {v}</li>"
+            data += "</ul>"
         return {
-            "content": title_str,
+            "content": title_str + data,
             "color": self.layer.color_field,
             "linetype": self.layer.linetype,
             "layer": _("Layer - ") + self.layer.name,
