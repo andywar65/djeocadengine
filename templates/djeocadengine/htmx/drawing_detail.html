@@ -5,7 +5,7 @@
   <h4 class="card-title">{% trans "Drawing"%}: {{ object.title }}</h4>
 </div>
 {% if object.image %}
-  <img src="{% thumbnail object.image 240x240 crop %}" class="card-img-top">
+  <img src="{% thumbnail object.image 480x240 crop %}" class="card-img-top">
 {% endif %}
 <div class="card-body"
      id="nav-card-body">

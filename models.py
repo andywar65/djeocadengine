@@ -134,7 +134,7 @@ class Drawing(models.Model):
         thumbnailer = get_thumbnailer(image)
         thumb = thumbnailer.get_thumbnail({"size": (256, 192), "crop": True})
         image_str = '<img src="%(image)s">' % {"image": thumb.url}
-        return {"content": image_str + title_str}
+        return {"content": image_str + "<br>" + title_str}
 
     def save(self, *args, **kwargs):
         # save and eventually upload DXF

@@ -17,7 +17,7 @@
           <div class="card-body">
             {% if object.image %}
               <img class="card-img-top"
-                   src="{% thumbnail object.image 240x240 crop %}"
+                   src="{% thumbnail object.image 480x240 crop %}"
                    alt="{{ object.title }}">
             {% endif %}
             {{ form.title|as_crispy_field }}
