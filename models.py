@@ -496,20 +496,12 @@ def extract_dxf(drawing):
         if ins.attribs:
             attrib_dict = {}
             for attr in ins.attribs:
-                attrib_dict[attr.tag] = attr.text
+                attrib_dict[attr.dxf.tag] = attr.dxf.text
             data_ins["attributes"] = attrib_dict
-        # check if layer exists
-        if ins.dxf.layer in layer_table:
-            layer_obj = layer_table[ins.dxf.layer]["layer_obj"]
-        else:
-            layer_obj = Layer.objects.create(
-                drawing_id=drawing.id,
-                name=ins.dxf.layer,
-            )
         # create Insertion
         Entity.objects.create(
             data=data_ins,
-            layer=layer_obj,
+            layer=layer_table[ins.dxf.layer]["layer_obj"],
             insertion=insertion_point,
             geom={
                 "geometries": geometries,
