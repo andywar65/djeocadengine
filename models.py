@@ -82,6 +82,19 @@ class Drawing(models.Model):
     __original_designx = None
     __original_designy = None
     __original_rotation = None
+    name_blacklist = ["*Model_Space", "DynamicInputDot"]
+    entity_types = [
+        "POINT",
+        "LINE",
+        "LWPOLYLINE",
+        "POLYLINE",
+        "3DFACE",
+        "CIRCLE",
+        "ARC",
+        "ELLIPSE",
+        "SPLINE",
+        "HATCH",
+    ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
