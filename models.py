@@ -17,6 +17,8 @@ from pyproj import Transformer
 from pyproj.aoi import AreaOfInterest
 from pyproj.database import query_utm_crs_info
 
+from .utils import extract_dxf
+
 
 class Drawing(models.Model):
 
@@ -194,7 +196,7 @@ class Drawing(models.Model):
                 or self.__original_rotation != self.rotation
             ):
                 self.related_layers.all().delete()
-                # self.extract_dxf()
+                extract_dxf(self)
                 # flag drawing as refreshable
                 if not self.needs_refresh:
                     self.needs_refresh = True
