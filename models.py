@@ -487,10 +487,17 @@ def extract_dxf(drawing):
         # prepare block data
         data_ins = {}
         data_ins["Block"] = ins.dxf.name
-        data_ins["rotation"] = ins.dxf.rotation
-        data_ins["x_scale"] = ins.dxf.xscale
-        data_ins["y_scale"] = ins.dxf.yscale
-        # TODO add an attribute dictionary
+        if ins.dxf.rotation:
+            data_ins["Rotation"] = ins.dxf.rotation
+        if ins.dxf.xscale:
+            data_ins["X scale"] = ins.dxf.xscale
+        if ins.dxf.yscale:
+            data_ins["Y scale"] = ins.dxf.yscale
+        if ins.attribs:
+            attrib_dict = {}
+            for attr in ins.attribs:
+                attrib_dict[attr.tag] = attr.text
+            data_ins["attributes"] = attrib_dict
         # check if layer exists
         if ins.dxf.layer in layer_table:
             layer_obj = layer_table[ins.dxf.layer]["layer_obj"]
