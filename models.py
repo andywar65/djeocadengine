@@ -414,13 +414,15 @@ def extract_dxf(drawing):
                                 if poly.contains(point):
                                     # handle different type of texts
                                     if t_type == "TEXT":
-                                        entity_data["text"] = t.dxf.text
+                                        entity_data[_("Name")] = t.dxf.text
                                     else:
-                                        entity_data["text"] = t.text
-                        entity_data["surface"] = round(poly.area, 2)
-                        entity_data["height"] = e.dxf.thickness
-                        entity_data["perimeter"] = round(poly.length, 2)
-                        entity_data["width"] = e.dxf.const_width
+                                        entity_data[_("Name")] = t.text
+                        entity_data[_("Surface")] = round(poly.area, 2)
+                        if e.dxf.thickness:
+                            entity_data[_("Height")] = e.dxf.thickness
+                        entity_data[_("Perimeter")] = round(poly.length, 2)
+                        if e.dxf.const_width:
+                            entity_data[_("Width")] = e.dxf.const_width
                         Entity.objects.create(
                             layer=layer_table[e.dxf.layer]["layer_obj"],
                             geom={
