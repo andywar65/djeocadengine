@@ -369,42 +369,38 @@ def extract_dxf(drawing):
     # prepare layer table
     layer_table = {}
     for layer in doc.layers:
+        if layer.dxf.name in drawing.layer_blacklist:
+            continue
         if layer.rgb:
             color = cad2hex(layer.rgb)
         else:
             color = cad2hex(layer.color)
+        layer_obj = Layer.objects.create(
+            drawing_id=drawing.id,
+            name=layer.dxf.name,
+            color_field=color,
+        )
         layer_table[layer.dxf.name] = {
-            "color": color,
-            "linetype": layer.dxf.linetype,
+            "layer_obj": layer_obj,
             "geometries": [],
         }
     for e_type in drawing.entity_types:
         # extract entities
-        # TODO catch polygons and see if they include text
-        # TODO then add key/value with 'label'/text
-        # TODO add key/value with area, thickness (height), volume
         for e in msp.query(e_type):
             geo_proxy = get_geo_proxy(e, m, utm2world)
             if geo_proxy:
+                # TODO catch polygons and see if they include text
+                # TODO then add key/value with 'label'/text
+                # TODO add key/value with area, thickness (height), volume
                 layer_table[e.dxf.layer]["geometries"].append(
                     geo_proxy.__geo_interface__
                 )
-    # create Layers
+    # create layer entities
     for name, layer_data in layer_table.items():
-        # exclude blacklisted layers
-        if name in drawing.layer_blacklist:
-            continue
-        # create layer 0 and layers with entities
-        if name == "0" or not layer_data["geometries"] == []:
-            layer_obj = Layer.objects.create(
-                drawing_id=drawing.id,
-                name=name,
-                color_field=layer_data["color"],
-            )
-            Entity.objects.create(
-                layer=layer_obj,
-                geom={
-                    "geometries": layer_data["geometries"],
-                    "type": "GeometryCollection",
-                },
-            )
+        Entity.objects.create(
+            layer=layer_data["layer_obj"],
+            geom={
+                "geometries": layer_data["geometries"],
+                "type": "GeometryCollection",
+            },
+        )
