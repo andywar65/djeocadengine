@@ -273,15 +273,10 @@ class Entity(models.Model):
             ltype = _("Block")
         else:
             ltype = _("Layer")
-        title_str = "<p>%(type)s: %(title)s, %(id)s: %(lid)d</p>" % {
-            "type": ltype,
-            "title": self.layer.name,
-            "id": _("ID"),
-            "lid": self.layer.id,
-        }
+        title_str = f"<p>{ltype}: {self.layer.name}</p>"
         data = ""
         if self.data:
-            data = "<ul>"
+            data = f"<ul><li>ID = {self.id}</li>"
             for k, v in self.data.items():
                 data += f"<li>{k} = {v}</li>"
             data += "</ul>"
@@ -414,15 +409,15 @@ def extract_dxf(drawing):
                                 if poly.contains(point):
                                     # handle different type of texts
                                     if t_type == "TEXT":
-                                        entity_data[_("Name")] = t.dxf.text
+                                        entity_data["Name"] = t.dxf.text
                                     else:
-                                        entity_data[_("Name")] = t.text
-                        entity_data[_("Surface")] = round(poly.area, 2)
+                                        entity_data["Name"] = t.text
+                        entity_data["Surface"] = round(poly.area, 2)
                         if e.dxf.thickness:
-                            entity_data[_("Height")] = e.dxf.thickness
-                        entity_data[_("Perimeter")] = round(poly.length, 2)
+                            entity_data["Height"] = e.dxf.thickness
+                        entity_data["Perimeter"] = round(poly.length, 2)
                         if e.dxf.const_width:
-                            entity_data[_("Width")] = e.dxf.const_width
+                            entity_data["Width"] = e.dxf.const_width
                         Entity.objects.create(
                             layer=layer_table[e.dxf.layer]["layer_obj"],
                             geom={
