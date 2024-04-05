@@ -1,5 +1,9 @@
+import json
 from math import atan2, cos, degrees, radians, sin  # noqa
+from pathlib import Path
 
+import ezdxf
+from django.conf import settings
 from ezdxf import colors
 from ezdxf.addons import geo
 from ezdxf.math import Vec3
@@ -72,3 +76,21 @@ def fake_geodata(drawing, geodata, utm_wcs, rot):
     geodata.dxf.reference_point = utm_wcs
     geodata.dxf.north_direction = (sin(rot), cos(rot))
     return geodata
+
+
+def extract_dxf(drawing):
+    # following conditional for test to work
+    if isinstance(drawing.geom, str):
+        drawing.geom = json.loads(drawing.geom)
+    # prepare transformers
+    world2utm, utm2world, utm_wcs, rot = prepare_transformers(drawing)
+    # get DXF
+    doc = ezdxf.readfile(Path(settings.MEDIA_ROOT).joinpath(str(drawing.dxf)))
+    msp = doc.modelspace()
+    geodata = msp.get_geodata()
+    if not geodata:
+        # faking geodata
+        geodata = msp.new_geodata()
+        geodata = fake_geodata(drawing, geodata, utm_wcs, rot)
+    # get transform matrix from true or fake geodata
+    m, epsg = geodata.get_crs_transformation(no_checks=True)  # noqa
