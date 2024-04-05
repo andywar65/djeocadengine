@@ -1,5 +1,5 @@
 import json
-from math import atan2, degrees
+from math import atan2, cos, degrees, radians, sin  # noqa
 from pathlib import Path
 
 import ezdxf
@@ -11,13 +11,15 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from djgeojson.fields import GeometryCollectionField, PointField
 from easy_thumbnails.files import get_thumbnailer
+from ezdxf import colors
+from ezdxf.addons import geo
 from ezdxf.lldxf.const import InvalidGeoDataException
+from ezdxf.math import Vec3
 from filer.fields.image import FilerImageField
 from pyproj import Transformer
 from pyproj.aoi import AreaOfInterest
 from pyproj.database import query_utm_crs_info
-
-from .utils import extract_dxf
+from shapely.geometry import Point, shape  # noqa
 
 
 class Drawing(models.Model):
@@ -252,3 +254,100 @@ class Entity(models.Model):
     class Meta:
         verbose_name = _("Entity")
         verbose_name_plural = _("Entities")
+
+
+"""
+    Collection of utilities
+"""
+
+
+def cad2hex(color):
+    if isinstance(color, tuple):
+        return "#{:02x}{:02x}{:02x}".format(color[0], color[1], color[2])
+    rgb24 = colors.DXF_DEFAULT_COLORS[color]
+    return "#{:06X}".format(rgb24)
+
+
+def get_geo_proxy(drawing, entity, matrix, transformer):
+    geo_proxy = geo.proxy(entity)
+    if geo_proxy.geotype == "Polygon":
+        if not shape(geo_proxy).is_valid:
+            return False
+    geo_proxy.wcs_to_crs(matrix)
+    geo_proxy.apply(lambda v: Vec3(transformer.transform(v.x, v.y)))
+    return geo_proxy
+
+
+def get_epsg_xml(drawing):
+    xml = """<?xml version="1.0"
+encoding="UTF-16" standalone="no" ?>
+<Dictionary version="1.0" xmlns="http://www.osgeo.org/mapguide/coordinatesystem">
+<Alias id="%(epsg)s" type="CoordinateSystem">
+<ObjectId>EPSG=%(epsg)s</ObjectId>
+<Namespace>EPSG Code</Namespace>
+</Alias>
+<Axis uom="METER">
+<CoordinateSystemAxis>
+<AxisOrder>1</AxisOrder>
+<AxisName>Easting</AxisName>
+<AxisAbbreviation>E</AxisAbbreviation>
+<AxisDirection>east</AxisDirection>
+</CoordinateSystemAxis>
+<CoordinateSystemAxis>
+<AxisOrder>2</AxisOrder>
+<AxisName>Northing</AxisName>
+<AxisAbbreviation>N</AxisAbbreviation>
+<AxisDirection>north</AxisDirection>
+</CoordinateSystemAxis>
+</Axis>
+</Dictionary>""" % {
+        "epsg": drawing.epsg
+    }
+    return xml
+
+
+def prepare_transformers(drawing):
+    world2utm = Transformer.from_crs(4326, drawing.epsg, always_xy=True)
+    utm2world = Transformer.from_crs(drawing.epsg, 4326, always_xy=True)
+    utm_wcs = world2utm.transform(
+        drawing.geom["coordinates"][0], drawing.geom["coordinates"][1]
+    )
+    rot = radians(drawing.rotation)
+    return world2utm, utm2world, utm_wcs, rot
+
+
+def fake_geodata(drawing, geodata, utm_wcs, rot):
+    geodata.coordinate_system_definition = get_epsg_xml(drawing)
+    geodata.dxf.design_point = (drawing.designx, drawing.designy, 0)
+    geodata.dxf.reference_point = utm_wcs
+    geodata.dxf.north_direction = (sin(rot), cos(rot))
+    return geodata
+
+
+def extract_dxf(drawing):
+    # following conditional for test to work
+    if isinstance(drawing.geom, str):
+        drawing.geom = json.loads(drawing.geom)
+    # prepare transformers
+    world2utm, utm2world, utm_wcs, rot = prepare_transformers(drawing)
+    # get DXF
+    doc = ezdxf.readfile(Path(settings.MEDIA_ROOT).joinpath(str(drawing.dxf)))
+    msp = doc.modelspace()
+    geodata = msp.get_geodata()
+    if not geodata:
+        # faking geodata
+        geodata = msp.new_geodata()
+        geodata = fake_geodata(drawing, geodata, utm_wcs, rot)
+    # get transform matrix from true or fake geodata
+    m, epsg = geodata.get_crs_transformation(no_checks=True)  # noqa
+    # create layers
+    for layer in doc.layers:
+        if layer.rgb:
+            color = cad2hex(layer.rgb)
+        else:
+            color = cad2hex(layer.color)
+        Layer.objects.create(
+            drawing_id=drawing.id,
+            name=layer.dxf.name,
+            color_field=color,
+        )
