@@ -6,6 +6,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from filer.models import Image
 
@@ -15,7 +16,7 @@ from .forms import (
     DrawingParentForm,
     DrawingUpdateForm,
 )
-from .models import Drawing
+from .models import Drawing, Entity
 
 
 class HxPageTemplateMixin:
@@ -101,15 +102,17 @@ class DrawingDetailView(HxPageTemplateMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context["lines"] = self.object.related_layers.filter(is_block=False)
+        layers = self.object.related_layers.filter(is_block=False)
+        id_list = layers.values_list("id", flat=True)
+        context["lines"] = Entity.objects.filter(layer_id__in=id_list)
         # context["blocks"] = self.object.related_layers.filter(is_block=True)
         # id_list = context["lines"].values_list("id", flat=True)
         # context["insertions"] = Insertion.objects.filter(layer_id__in=id_list)
         context["drawings"] = self.object
         # context["author_list"] = [_("Author - ") + self.object.user.username]
-        # name_list = context["lines"].values_list("name", flat=True)
-        # context["layer_list"] = list(dict.fromkeys(name_list))
-        # context["layer_list"] = [_("Layer - ") + s for s in context["layer_list"]]
+        name_list = layers.values_list("name", flat=True)
+        context["layer_list"] = list(dict.fromkeys(name_list))
+        context["layer_list"] = [_("Layer - ") + s for s in context["layer_list"]]
         return context
 
     def dispatch(self, request, *args, **kwargs):

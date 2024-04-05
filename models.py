@@ -86,6 +86,7 @@ class Drawing(models.Model):
     __original_designx = None
     __original_designy = None
     __original_rotation = None
+    # blacklists in settings?
     layer_blacklist = [
         "Defpoints",
     ]
@@ -258,6 +259,25 @@ class Entity(models.Model):
         verbose_name = _("Entity")
         verbose_name_plural = _("Entities")
 
+    @property
+    def popupContent(self):
+        if self.layer.is_block:
+            ltype = _("Block")
+        else:
+            ltype = _("Layer")
+        title_str = "<p>%(type)s: %(title)s, %(id)s: %(lid)d</p>" % {
+            "type": ltype,
+            "title": self.layer.name,
+            "id": _("ID"),
+            "lid": self.layer.id,
+        }
+        return {
+            "content": title_str,
+            "color": self.layer.color_field,
+            "linetype": self.layer.linetype,
+            "layer": _("Layer - ") + self.layer.name,
+        }
+
 
 """
     Collection of utilities
@@ -271,7 +291,7 @@ def cad2hex(color):
     return "#{:06X}".format(rgb24)
 
 
-def get_geo_proxy(drawing, entity, matrix, transformer):
+def get_geo_proxy(entity, matrix, transformer):
     geo_proxy = geo.proxy(entity)
     if geo_proxy.geotype == "Polygon":
         if not shape(geo_proxy).is_valid:
@@ -343,16 +363,45 @@ def extract_dxf(drawing):
         geodata = fake_geodata(drawing, geodata, utm_wcs, rot)
     # get transform matrix from true or fake geodata
     m, epsg = geodata.get_crs_transformation(no_checks=True)  # noqa
-    # create layers
+    # prepare layer table
+    layer_table = {}
     for layer in doc.layers:
-        if layer.dxf.name in drawing.layer_blacklist:
-            continue
         if layer.rgb:
             color = cad2hex(layer.rgb)
         else:
             color = cad2hex(layer.color)
-        Layer.objects.create(
-            drawing_id=drawing.id,
-            name=layer.dxf.name,
-            color_field=color,
-        )
+        layer_table[layer.dxf.name] = {
+            "color": color,
+            "linetype": layer.dxf.linetype,
+            "geometries": [],
+        }
+    for e_type in drawing.entity_types:
+        # extract entities
+        # TODO catch polygons and see if they include text
+        # TODO then add key/value with 'label'/text
+        # TODO add key/value with area, thickness (height), volume
+        for e in msp.query(e_type):
+            geo_proxy = get_geo_proxy(e, m, utm2world)
+            if geo_proxy:
+                layer_table[e.dxf.layer]["geometries"].append(
+                    geo_proxy.__geo_interface__
+                )
+    # create Layers
+    for name, layer_data in layer_table.items():
+        # exclude blacklisted layers
+        if name in drawing.layer_blacklist:
+            continue
+        # create layer 0 and layers with entities
+        if name == "0" or not layer_data["geometries"] == []:
+            layer_obj = Layer.objects.create(
+                drawing_id=drawing.id,
+                name=name,
+                color_field=layer_data["color"],
+            )
+            Entity.objects.create(
+                layer=layer_obj,
+                geom={
+                    "geometries": layer_data["geometries"],
+                    "type": "GeometryCollection",
+                },
+            )
