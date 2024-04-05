@@ -278,8 +278,15 @@ class Entity(models.Model):
         if self.data:
             data = f"<ul><li>ID = {self.id}</li>"
             for k, v in self.data.items():
+                if k == "attributes":
+                    continue
                 data += f"<li>{k} = {v}</li>"
             data += "</ul>"
+            if "attributes" in self.data:
+                data += "<p>Attributes</p><ul>"
+                for k, v in self.data["attributes"].items():
+                    data += f"<li>{k} = {v}</li>"
+                data += "</ul>"
         return {
             "content": title_str + data,
             "color": self.layer.color_field,
@@ -488,11 +495,11 @@ def extract_dxf(drawing):
         data_ins = {}
         data_ins["Block"] = ins.dxf.name
         if ins.dxf.rotation:
-            data_ins["Rotation"] = ins.dxf.rotation
+            data_ins["Rotation"] = round(ins.dxf.rotation, 2)
         if ins.dxf.xscale:
-            data_ins["X scale"] = ins.dxf.xscale
+            data_ins["X scale"] = round(ins.dxf.xscale, 2)
         if ins.dxf.yscale:
-            data_ins["Y scale"] = ins.dxf.yscale
+            data_ins["Y scale"] = round(ins.dxf.yscale, 2)
         if ins.attribs:
             attrib_dict = {}
             for attr in ins.attribs:
