@@ -211,7 +211,9 @@ class Drawing(models.Model):
                 or self.__original_designy != self.designy
                 or self.__original_rotation != self.rotation
             ):
-                self.related_layers.all().delete()
+                all_layers = self.related_layers.all()
+                if all_layers.exists():
+                    all_layers.delete()
                 extract_dxf(self)
                 # flag drawing as refreshable
                 if not self.needs_refresh:

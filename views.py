@@ -104,12 +104,10 @@ class DrawingDetailView(HxPageTemplateMixin, DetailView):
         context = super().get_context_data(**kwargs)
         layers = self.object.related_layers.filter(is_block=False)
         id_list = layers.values_list("id", flat=True)
-        context["lines"] = Entity.objects.filter(layer_id__in=id_list)
-        # context["blocks"] = self.object.related_layers.filter(is_block=True)
-        # id_list = context["lines"].values_list("id", flat=True)
-        # context["insertions"] = Insertion.objects.filter(layer_id__in=id_list)
+        context["lines"] = Entity.objects.filter(
+            layer_id__in=id_list
+        ).prefetch_related()
         context["drawings"] = self.object
-        # context["author_list"] = [_("Author - ") + self.object.user.username]
         name_list = layers.values_list("name", flat=True)
         context["layer_list"] = list(dict.fromkeys(name_list))
         context["layer_list"] = [_("Layer - ") + s for s in context["layer_list"]]
