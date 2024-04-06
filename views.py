@@ -192,3 +192,16 @@ class LayerUpdateView(PermissionRequiredMixin, UpdateView):
             "djeocadengine:layer_detail",
             kwargs={"pk": self.object.id},
         )
+
+
+@permission_required("djeocadengine.delete_layer")
+def layer_delete_view(request, pk):
+    layer = get_object_or_404(Layer, id=pk)
+    if not request.htmx or layer.name == "0":
+        raise Http404("Request without HTMX headers")
+    layer.delete()
+    return TemplateResponse(
+        request,
+        "djeocadengine/htmx/layer_delete.html",
+        {},
+    )

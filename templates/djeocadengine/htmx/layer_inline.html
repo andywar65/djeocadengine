@@ -23,10 +23,9 @@
       </a>
       {% if layer.name != "0" %}
         <button class="btn btn-danger"
-                hx-get="#"
+                hx-get="{% url 'djeocadengine:layer_delete' pk=layer.id %}"
                 hx-target="#layer-{{ layer.id }}"
-                hx-swap="outerHTML"
-                hx-confirm="{% trans 'Are you sure you want to delete this layer / block?' %}"
+                hx-confirm="{% trans 'Are you sure you want to delete this layer' %}"
                 title="{% trans 'Delete' %}">
           <i class="bi-trash" style="font-size: 1rem;"></i>
           <span class="htmx-indicator spinner-border spinner-border-sm"></span>

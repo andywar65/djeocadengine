@@ -11,6 +11,7 @@ from .views import (
     LayerDetailView,
     LayerUpdateView,
     drawing_delete_view,
+    layer_delete_view,
 )
 
 app_name = "djeocadengine"
@@ -55,5 +56,10 @@ urlpatterns = [
         "layer/<pk>/update",
         LayerUpdateView.as_view(),
         name="layer_update",
+    ),
+    path(
+        "layer/<pk>/delete",
+        layer_delete_view,
+        name="layer_delete",
     ),
 ]
