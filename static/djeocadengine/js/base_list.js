@@ -20,18 +20,6 @@ function map_init(map, options) {
         maxZoom: 19,
       });
 
-    // const mapbox_token = JSON.parse(document.getElementById("mapbox_token").textContent);
-
-    // const sat_map = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-      // {
-        // attribution: 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        // maxZoom: 19,
-        // tileSize: 512,
-        // zoomOffset: -1,
-        // id: "mapbox/satellite-v9",
-        // accessToken: mapbox_token
-      // });
-
     const layer_control = L.control.layers(null).addTo(map);
 
     function getCollections() {
@@ -45,14 +33,7 @@ function map_init(map, options) {
       });
       // add base layers back to map and layer control
       base_map.addTo(map);
-      // layer_control.addBaseLayer(base_map, "Base");
-      // layer_control.addBaseLayer(sat_map, "Satellite");
-      // add other layers to map and layer control
-      // let collection = JSON.parse(document.getElementById("author_data").textContent);
-      // for (author of collection) {
-        // window[author] = L.layerGroup().addTo(map);
-        // layer_control.addOverlay(window[author], author);
-      // }
+      // add layer groups
       collection = JSON.parse(document.getElementById("layer_data").textContent);
       if (collection !== null) {
         for (layer_name of collection) {
@@ -72,13 +53,6 @@ function map_init(map, options) {
         for (line of collection.features) {
           let name = line.properties.popupContent.layer
           L.geoJson(line, {style: setLineStyle, onEachFeature: onEachFeature}).addTo(window[name]);
-        }
-      }
-      collection = JSON.parse(document.getElementById("block_data").textContent);
-      if (collection !== null) {
-        for (block of collection.features) {
-          let name = block.properties.popupContent.layer
-          L.geoJson(block, {style: setLineStyle, onEachFeature: onEachFeature}).addTo(window[name]);
         }
       }
     }

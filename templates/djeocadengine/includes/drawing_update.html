@@ -50,7 +50,9 @@
     <div class="col col-xl-6 col-lg-6 col-12">
       <h4>{% trans "Layers" %}</h4>
       {% for layer in layers %}
-        {% include "djeocadengine/htmx/layer_inline.html" %}
+        <div id="layer-{{ layer.id }}">
+          {% include "djeocadengine/htmx/layer_inline.html" %}
+        </div>
       {% endfor %}
     </div>
     <div class="col col-xl-6 col-lg-6 col-12">
