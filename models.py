@@ -424,10 +424,10 @@ def extract_dxf(drawing):
                                     break
                         entity_data["Surface"] = round(poly.area, 2)
                         if e.dxf.thickness:
-                            entity_data["Height"] = e.dxf.thickness
+                            entity_data["Height"] = round(e.dxf.thickness, 2)
                         entity_data["Perimeter"] = round(poly.length, 2)
                         if e.dxf.const_width:
-                            entity_data["Width"] = e.dxf.const_width
+                            entity_data["Width"] = round(e.dxf.const_width, 2)
                         Entity.objects.create(
                             layer=layer_table[e.dxf.layer]["layer_obj"],
                             geom={
