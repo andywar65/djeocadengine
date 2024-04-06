@@ -1,0 +1,22 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+<div class="card mx-auto" style="margin-bottom: 20px">
+  <div class="card-header">
+    {% trans "Update layer" %} {{ object.id }}
+  </div>
+  <div class="card-body">
+    {{ form|crispy }}
+    <button class="btn btn-primary"
+            type="submit"
+            hx-post="{% url 'layer_update' pk=object.id %}"
+            hx-target="#layer-{{ object.id }}">
+      {% trans "Change Layer" %}
+    </button>
+    <button class="btn-close"
+            title="{% trans 'Dismiss' %}"
+            hx-get="{% url 'layer_detail' pk=object.id %}"
+            hx-target="#layer-{{ object.id }}">
+    </button>
+  </div>
+</div>

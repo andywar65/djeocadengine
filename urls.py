@@ -8,6 +8,8 @@ from .views import (
     DrawingGeodataView,
     DrawingManualView,
     DrawingUpdateView,
+    LayerDetailView,
+    LayerUpdateView,
     drawing_delete_view,
 )
 
@@ -43,5 +45,15 @@ urlpatterns = [
         "drawing/<pk>/delete",
         drawing_delete_view,
         name="drawing_delete",
+    ),
+    path(
+        "layer/<pk>/",
+        LayerDetailView.as_view(),
+        name="layer_detail",
+    ),
+    path(
+        "layer/<pk>/update",
+        LayerUpdateView.as_view(),
+        name="layer_update",
     ),
 ]

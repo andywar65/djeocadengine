@@ -15,8 +15,9 @@ from .forms import (
     DrawingManualForm,
     DrawingParentForm,
     DrawingUpdateForm,
+    LayerUpdateForm,
 )
-from .models import Drawing, Entity
+from .models import Drawing, Entity, Layer
 
 
 class HxPageTemplateMixin:
@@ -162,3 +163,32 @@ def drawing_delete_view(request, pk):
         "djeocadengine/htmx/drawing_delete.html",
         {},
     )
+
+
+class LayerDetailView(DetailView):
+    model = Layer
+    template_name = "djeocadengine/htmx/layer_inline.html"
+    context_object_name = "layer"
+
+    def get_template_names(self):
+        if not self.request.htmx:
+            raise Http404("Request without HTMX headers")
+        return [self.template_name]
+
+
+class LayerUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = "djeocadengine.change_layer"
+    model = Layer
+    form_class = LayerUpdateForm
+    template_name = "djeocadengine/htmx/layer_update.html"
+
+    def get_template_names(self):
+        if not self.request.htmx:
+            raise Http404("Request without HTMX headers")
+        return [self.template_name]
+
+    def get_success_url(self):
+        return reverse(
+            "djeocadengine:layer_detail",
+            kwargs={"pk": self.object.id},
+        )

@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from leaflet.forms.widgets import LeafletWidget
 
-from djeocadengine.models import Drawing
+from djeocadengine.models import Drawing, Layer
 
 
 class DrawingCreateForm(ModelForm):
@@ -55,3 +55,9 @@ class DrawingUpdateForm(ModelForm):
                 }
             )
         }
+
+
+class LayerUpdateForm(ModelForm):
+    class Meta:
+        model = Layer
+        fields = ["color_field", "linetype"]

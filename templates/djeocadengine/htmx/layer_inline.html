@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<div id="layer-detail-{{ layer.id }}" class="card mx-auto" style="margin-bottom: 20px">
+<div class="card mx-auto" style="margin-bottom: 20px">
   <div class="card-header" style="background-color: {{ layer.color_field }}">
     <!-- Don't delete this comment -->
   </div>
@@ -16,7 +16,8 @@
     </p>
     {% if not layer.is_block %}
       <a class="btn btn-primary"
-         href="#"
+         hx-get="{% url 'djeocadengine:layer_update' pk=layer.id %}"
+         hx-target="#layer-{{ layer.id }}"
          title="{% trans 'Modify' %}">
         <i class="bi-pencil" style="font-size: 1rem;"></i>
       </a>
@@ -34,7 +35,3 @@
     {% endif %}
   </div>
 </div>
-{% if not layer.is_block %}
-  <div id="layer-update-{{ layer.id }}" class="card mx-auto" style="margin-bottom: 20px; display: none">
-  </div>
-{% endif %}
