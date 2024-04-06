@@ -3,6 +3,7 @@ from math import atan2, cos, degrees, radians, sin
 from pathlib import Path
 
 import ezdxf
+import nh3
 from colorfield.fields import ColorField
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
@@ -416,9 +417,9 @@ def extract_dxf(drawing):
                                 if poly.contains(point):
                                     # handle different type of texts
                                     if t_type == "TEXT":
-                                        entity_data["Name"] = t.dxf.text
+                                        entity_data["Name"] = nh3.clean(t.dxf.text)
                                     else:
-                                        entity_data["Name"] = t.text
+                                        entity_data["Name"] = nh3.clean(t.text)
                         entity_data["Surface"] = round(poly.area, 2)
                         if e.dxf.thickness:
                             entity_data["Height"] = e.dxf.thickness
@@ -493,7 +494,7 @@ def extract_dxf(drawing):
                     geometries.append(geo_proxy.__geo_interface__)
         # prepare block data
         data_ins = {}
-        data_ins["Block"] = ins.dxf.name
+        data_ins["Block"] = nh3.clean(ins.dxf.name)
         if ins.dxf.rotation:
             data_ins["Rotation"] = round(ins.dxf.rotation, 2)
         if ins.dxf.xscale:
@@ -503,7 +504,7 @@ def extract_dxf(drawing):
         if ins.attribs:
             attrib_dict = {}
             for attr in ins.attribs:
-                attrib_dict[attr.dxf.tag] = attr.dxf.text
+                attrib_dict[nh3.clean(attr.dxf.tag)] = nh3.clean(attr.dxf.text)
             data_ins["attributes"] = attrib_dict
         # create Insertion
         Entity.objects.create(
