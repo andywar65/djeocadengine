@@ -6,17 +6,19 @@
     {% trans "Update layer" %} {{ object.id }}
   </div>
   <div class="card-body">
-    {{ form|crispy }}
-    <button class="btn btn-primary"
-            type="submit"
-            hx-post="{% url 'layer_update' pk=object.id %}"
-            hx-target="#layer-{{ object.id }}">
-      {% trans "Change Layer" %}
-    </button>
-    <button class="btn-close"
-            title="{% trans 'Dismiss' %}"
-            hx-get="{% url 'layer_detail' pk=object.id %}"
-            hx-target="#layer-{{ object.id }}">
-    </button>
+    <form>
+      {{ form|crispy }}
+      <button class="btn btn-primary"
+              type="submit"
+              hx-post="{% url 'djeocadengine:layer_update' pk=object.id %}"
+              hx-target="#layer-{{ object.id }}">
+        {% trans "Change Layer" %}
+      </button>
+      <button class="btn-close"
+              title="{% trans 'Dismiss' %}"
+              hx-get="{% url 'djeocadengine:layer_detail' pk=object.id %}"
+              hx-target="#layer-{{ object.id }}">
+      </button>
+    </form>
   </div>
 </div>
