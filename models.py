@@ -105,6 +105,7 @@ class Drawing(models.Model):
         "SPLINE",
         "HATCH",
     ]
+    # TEXT overrides MTEXT
     text_types = [
         "MTEXT",
         "TEXT",
@@ -420,6 +421,7 @@ def extract_dxf(drawing):
                                         entity_data["Name"] = nh3.clean(t.dxf.text)
                                     else:
                                         entity_data["Name"] = nh3.clean(t.text)
+                                    break
                         entity_data["Surface"] = round(poly.area, 2)
                         if e.dxf.thickness:
                             entity_data["Height"] = e.dxf.thickness
