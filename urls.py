@@ -10,6 +10,7 @@ from .views import (
     DrawingUpdateView,
     LayerDetailView,
     LayerUpdateView,
+    csv_download,
     drawing_delete_view,
     layer_delete_view,
 )
@@ -61,5 +62,10 @@ urlpatterns = [
         "layer/<pk>/delete",
         layer_delete_view,
         name="layer_delete",
+    ),
+    path(
+        "drawing/<pk>/csv",
+        csv_download,
+        name="drawing_csv",
     ),
 ]

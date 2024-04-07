@@ -25,6 +25,12 @@
       </a>
     </li>
     <li>
+      <a class="link link-success"
+         href="{% url 'djeocadengine:drawing_csv' pk=object.id %}">
+        {% trans "Download CSV" %}
+      </a>
+    </li>
+    <li>
       <a class="link link-danger"
          hx-get="{% url 'djeocadengine:drawing_delete' pk=object.id %}"
          hx-target="#nav-card-body"
