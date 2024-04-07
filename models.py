@@ -277,25 +277,25 @@ class Entity(models.Model):
             ltype = _("Block")
         else:
             ltype = _("Layer")
-        title_str = f"<p>{ltype}: {self.layer.name}</p>"
+        title_str = f"<p>{ltype}: {nh3.clean(self.layer.name)}</p>"
         data = ""
         if self.data:
             data = f"<ul><li>ID = {self.id}</li>"
             for k, v in self.data.items():
                 if k == "attributes":
                     continue
-                data += f"<li>{k} = {v}</li>"
+                data += f"<li>{k} = {nh3.clean(str(v))}</li>"
             data += "</ul>"
             if "attributes" in self.data:
                 data += "<p>Attributes</p><ul>"
                 for k, v in self.data["attributes"].items():
-                    data += f"<li>{k} = {v}</li>"
+                    data += f"<li>{nh3.clean(str(k))} = {nh3.clean(str(v))}</li>"
                 data += "</ul>"
         return {
             "content": title_str + data,
             "color": self.layer.color_field,
             "linetype": self.layer.linetype,
-            "layer": _("Layer - ") + self.layer.name,
+            "layer": _("Layer - ") + nh3.clean(self.layer.name),
         }
 
 
@@ -420,9 +420,9 @@ def extract_dxf(drawing):
                                 if poly.contains(point):
                                     # handle different type of texts
                                     if t_type == "TEXT":
-                                        entity_data["Name"] = nh3.clean(t.dxf.text)
+                                        entity_data["Name"] = t.dxf.text
                                     else:
-                                        entity_data["Name"] = nh3.clean(t.text)
+                                        entity_data["Name"] = t.text
                                     break
                         entity_data["Surface"] = round(poly.area, 2)
                         if e.dxf.thickness:
@@ -498,7 +498,7 @@ def extract_dxf(drawing):
                     geometries.append(geo_proxy.__geo_interface__)
         # prepare block data
         data_ins = {}
-        data_ins["Block"] = nh3.clean(ins.dxf.name)
+        data_ins["Block"] = ins.dxf.name
         if ins.dxf.rotation:
             data_ins["Rotation"] = round(ins.dxf.rotation, 2)
         if ins.dxf.xscale:
@@ -508,7 +508,7 @@ def extract_dxf(drawing):
         if ins.attribs:
             attrib_dict = {}
             for attr in ins.attribs:
-                attrib_dict[nh3.clean(attr.dxf.tag)] = nh3.clean(attr.dxf.text)
+                attrib_dict[attr.dxf.tag] = attr.dxf.text
             data_ins["attributes"] = attrib_dict
         # create Insertion
         Entity.objects.create(
