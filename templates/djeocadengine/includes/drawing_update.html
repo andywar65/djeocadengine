@@ -32,12 +32,13 @@
               </div>
             </div>
             {{ form.rotation|as_crispy_field }}
-          </div>
-          <div class="card-footer">
             <input class="btn btn-primary"
-                   style="margin-bottom: 15px;"
                    type="submit"
                    value="{% trans 'Update' %}" />
+            <button class="btn-close"
+                    title="{% trans 'Dismiss' %}"
+                    href="{% url 'djeocadengine:drawing_detail' pk=object.id %}">
+            </button>
           </div>
         </div>
       </div>
