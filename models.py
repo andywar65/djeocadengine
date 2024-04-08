@@ -448,13 +448,16 @@ def extract_dxf(drawing):
     # prepare transformers
     world2utm, utm2world, utm_wcs, rot = prepare_transformers(drawing)
     # get DXF
-    doc = ezdxf.readfile(Path(settings.MEDIA_ROOT).joinpath(str(drawing.dxf)))
+    path = Path(settings.MEDIA_ROOT).joinpath(str(drawing.dxf))
+    doc = ezdxf.readfile(path)
     msp = doc.modelspace()
     geodata = msp.get_geodata()
     if not geodata:
         # faking geodata
         geodata = msp.new_geodata()
         geodata = fake_geodata(drawing, geodata, utm_wcs, rot)
+        # replace stored DXF
+        doc.saveas(filename=drawing.dxf.path, encoding="utf-8", fmt="asc")
     # get transform matrix from true or fake geodata
     m, epsg = geodata.get_crs_transformation(no_checks=True)  # noqa
     # prepare layer table
