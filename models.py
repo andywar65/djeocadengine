@@ -221,11 +221,6 @@ class Drawing(models.Model):
                     self.needs_refresh = True
                     super(Drawing, self).save()
 
-    def add_geodata_to_file(self):
-        # here we will add geodata to dxf and save it
-        # set needs_refresh to False
-        return
-
     def write_csv(self, writer):
         writer_data = []
         layers = self.related_layers.all()
