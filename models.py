@@ -155,6 +155,7 @@ class Drawing(models.Model):
                 self.designx = self.parent.designx
                 self.designy = self.parent.designy
                 self.rotation = self.parent.rotation
+                # maybe next save is useless, as file is saved at the end
                 super(Drawing, self).save(*args, **kwargs)
             else:
                 # search for geodata in DXF
@@ -219,6 +220,11 @@ class Drawing(models.Model):
                 if not self.needs_refresh:
                     self.needs_refresh = True
                     super(Drawing, self).save()
+
+    def add_geodata_to_file(self):
+        # here we will add geodata to dxf and save it
+        # set needs_refresh to False
+        return
 
     def write_csv(self, writer):
         writer_data = []

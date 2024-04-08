@@ -217,3 +217,13 @@ def csv_download(request, pk):
     writer = drawing.write_csv(writer)
 
     return response
+
+
+def drawing_download(request, pk):
+    drawing = get_object_or_404(Drawing, id=pk)
+    if drawing.needs_refresh:
+        drawing.add_geodata_to_file()
+    response = HttpResponse(drawing.dxf, content_type="text/plain")
+    response["Content-Disposition"] = "attachment; filename=%s.dxf" % drawing.title
+
+    return response
