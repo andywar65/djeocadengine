@@ -205,6 +205,7 @@ class Drawing(models.Model):
                         super(Drawing, self).save(*args, **kwargs)
         # with geom (insertion) we can extract DXF!
         if self.geom:
+            # check if something changed
             if (
                 self.__original_dxf != self.dxf
                 or self.__original_geom != self.geom
@@ -216,10 +217,6 @@ class Drawing(models.Model):
                 if all_layers.exists():
                     all_layers.delete()
                 extract_dxf(self)
-                # flag drawing as refreshable
-                if not self.needs_refresh:
-                    self.needs_refresh = True
-                    super(Drawing, self).save()
 
     def write_csv(self, writer):
         writer_data = []
