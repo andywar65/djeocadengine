@@ -68,11 +68,6 @@ class Drawing(models.Model):
         _("Rotation"),
         default=0,
     )
-    needs_refresh = models.BooleanField(
-        _("Refresh DXF file from layers"),
-        default=True,
-        editable=False,
-    )
     epsg = models.IntegerField(
         _("CRS code"),
         null=True,
