@@ -1,11 +1,9 @@
 import json
 from math import atan2, cos, degrees, radians, sin
-from pathlib import Path
 
 import ezdxf
 import nh3
 from colorfield.fields import ColorField
-from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
@@ -154,7 +152,7 @@ class Drawing(models.Model):
                 super(Drawing, self).save(*args, **kwargs)
             else:
                 # search for geodata in DXF
-                doc = ezdxf.readfile(Path(settings.MEDIA_ROOT).joinpath(str(self.dxf)))
+                doc = ezdxf.readfile(self.dxf.path)
                 msp = doc.modelspace()
                 geodata = msp.get_geodata()
                 if geodata:
@@ -435,8 +433,7 @@ def extract_dxf(drawing):
     # prepare transformers
     world2utm, utm2world, utm_wcs, rot = prepare_transformers(drawing)
     # get DXF
-    path = Path(settings.MEDIA_ROOT).joinpath(str(drawing.dxf))
-    doc = ezdxf.readfile(path)
+    doc = ezdxf.readfile(drawing.dxf.path)
     msp = doc.modelspace()
     geodata = msp.get_geodata()
     if not geodata:
