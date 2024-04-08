@@ -208,109 +208,12 @@ def layer_delete_view(request, pk):
     )
 
 
-def csv_writer(writer, dxf):
-    writer.writerow([dxf.title])
-    writer.writerow(
-        [
-            _("ID"),
-            _("Layer"),
-            _("Block"),
-            _("Name"),
-            _("Surface"),
-            _("Height"),
-            _("Width"),
-            _("Latitude"),
-            _("Longitude"),
-            _("Attributes"),
-        ]
-    )
-    data = dxf.extract_data()
-    for d in data:
-        writer.writerow(
-            [
-                d["plan"],
-                d["id"],
-                d["layer"],
-                d["interv"],
-                d["surface"],
-                d["height"],
-                d["volume"],
-            ]
-        )
-    return writer
-
-
 def csv_download(request, pk):
-    dxf = get_object_or_404(Drawing, id=pk)
-    writer_data = []
-    layers = dxf.related_layers.all()
-    for layer in layers:
-        entities = layer.related_entities.exclude(data=None)
-        for e in entities:
-            entity_data = {
-                "id": e.id,
-                "layer": layer.name,
-                "data": e.data,
-            }
-            if e.insertion:
-                entity_data["Latitude"] = e.insertion["coordinates"][0]
-                entity_data["Longitude"] = e.insertion["coordinates"][1]
-            writer_data.append(entity_data)
+    drawing = get_object_or_404(Drawing, id=pk)
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = f'attachment; filename="{dxf.title}.csv"'
-
+    response["Content-Disposition"] = f'attachment; filename="{drawing.title}.csv"'
     writer = csv.writer(response)
-    writer.writerow(
-        [
-            _("ID"),
-            _("Layer"),
-            _("Block"),
-            _("Name"),
-            _("Surface"),
-            _("Perimeter"),
-            _("Height"),
-            _("Width"),
-            _("Rotation"),
-            _("X scale"),
-            _("Y scale"),
-            _("Latitude"),
-            _("Longitude"),
-            _("Attributes"),
-        ]
-    )
-    keys = [
-        "Block",
-        "Name",
-        "Surface",
-        "Perimeter",
-        "Height",
-        "Width",
-        "Rotation",
-        "X scale",
-        "Y scale",
-    ]
-    for wd in writer_data:
-        row = []
-        row.append(wd["id"])
-        row.append(wd["layer"])
-        for k in keys:
-            if k in wd["data"]:
-                row.append(wd["data"][k])
-            else:
-                row.append("")
-        if "Latitude" in wd:
-            row.append(wd["Latitude"])
-        else:
-            row.append("")
-        if "Longitude" in wd:
-            row.append(wd["Longitude"])
-        else:
-            row.append("")
-        if "attributes" in wd["data"]:
-            for attr, value in wd["data"]["attributes"].items():
-                row.append(attr)
-                row.append(value)
-        writer.writerow(row)
+    writer = drawing.write_csv(writer)
 
     return response
