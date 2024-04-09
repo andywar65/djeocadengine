@@ -150,7 +150,7 @@ class Drawing(models.Model):
                 self.rotation = self.parent.rotation
                 super(Drawing, self).save(*args, **kwargs)
                 # we have eveything we need, go ahead!
-                extract_dxf(self)
+                extract_dxf(self, doc=None, refresh=True)
                 return
             # check if user has inserted origin on map
             elif self.geom:
@@ -170,7 +170,7 @@ class Drawing(models.Model):
                 self.epsg = utm_crs_list[0].code
                 super(Drawing, self).save(*args, **kwargs)
                 # we have eveything we need, go ahead!
-                extract_dxf(self)
+                extract_dxf(self, doc=None, refresh=True)
                 return
             # no user input, search for geodata in dxf
             else:
@@ -213,7 +213,7 @@ class Drawing(models.Model):
             all_layers = self.related_layers.all()
             if all_layers.exists():
                 all_layers.delete()
-            extract_dxf(self)
+            extract_dxf(self, doc=None, refresh=True)
 
     def write_csv(self, writer):
         writer_data = []
@@ -430,7 +430,7 @@ def fake_geodata(drawing, geodata, utm_wcs, rot):
     return geodata
 
 
-def extract_dxf(drawing, doc=None):
+def extract_dxf(drawing, doc=None, refresh=False):
     # following conditional for test to work
     if isinstance(drawing.geom, str):
         drawing.geom = json.loads(drawing.geom)
@@ -441,7 +441,7 @@ def extract_dxf(drawing, doc=None):
         doc = ezdxf.readfile(drawing.dxf.path)
     msp = doc.modelspace()
     geodata = msp.get_geodata()
-    if not geodata:
+    if not geodata or refresh:
         # faking geodata
         geodata = msp.new_geodata()
         geodata = fake_geodata(drawing, geodata, utm_wcs, rot)
