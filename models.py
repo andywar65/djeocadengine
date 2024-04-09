@@ -141,17 +141,39 @@ class Drawing(models.Model):
         super(Drawing, self).save(*args, **kwargs)
         # check if we have coordinate system
         if not self.epsg:
-            # search geodata in parent
+            # check if user has inserted parent
             if self.parent:
                 self.geom = self.parent.geom
                 self.epsg = self.parent.epsg
                 self.designx = self.parent.designx
                 self.designy = self.parent.designy
                 self.rotation = self.parent.rotation
-                # maybe next save is useless, as file is saved at the end
                 super(Drawing, self).save(*args, **kwargs)
+                # we have eveything we need, go ahead!
+                extract_dxf(self)
+                return
+            # check if user has inserted origin on map
+            elif self.geom:
+                # following conditional for test to work
+                if isinstance(self.geom, str):
+                    self.geom = json.loads(self.geom)
+                # let's find proper UTM
+                utm_crs_list = query_utm_crs_info(
+                    datum_name="WGS 84",
+                    area_of_interest=AreaOfInterest(
+                        west_lon_degree=self.geom["coordinates"][0],
+                        south_lat_degree=self.geom["coordinates"][1],
+                        east_lon_degree=self.geom["coordinates"][0],
+                        north_lat_degree=self.geom["coordinates"][1],
+                    ),
+                )
+                self.epsg = utm_crs_list[0].code
+                super(Drawing, self).save(*args, **kwargs)
+                # we have eveything we need, go ahead!
+                extract_dxf(self)
+                return
+            # no user input, search for geodata in dxf
             else:
-                # search for geodata in DXF
                 doc = ezdxf.readfile(self.dxf.path)
                 msp = doc.modelspace()
                 geodata = msp.get_geodata()
@@ -177,39 +199,21 @@ class Drawing(models.Model):
                         )
                     )
                     super(Drawing, self).save(*args, **kwargs)
-                else:
-                    # can't find geodata in DXF, need manual insertion
-                    # check if user has inserted origin on map
-                    if self.geom:
-                        # following conditional for test to work
-                        if isinstance(self.geom, str):
-                            self.geom = json.loads(self.geom)
-                        # let's try to find proper UTM
-                        utm_crs_list = query_utm_crs_info(
-                            datum_name="WGS 84",
-                            area_of_interest=AreaOfInterest(
-                                west_lon_degree=self.geom["coordinates"][0],
-                                south_lat_degree=self.geom["coordinates"][1],
-                                east_lon_degree=self.geom["coordinates"][0],
-                                north_lat_degree=self.geom["coordinates"][1],
-                            ),
-                        )
-                        self.epsg = utm_crs_list[0].code
-                        super(Drawing, self).save(*args, **kwargs)
-        # with geom (insertion) we can extract DXF!
-        if self.geom:
-            # check if something changed
-            if (
-                self.__original_dxf != self.dxf
-                or self.__original_geom != self.geom
-                or self.__original_designx != self.designx
-                or self.__original_designy != self.designy
-                or self.__original_rotation != self.rotation
-            ):
-                all_layers = self.related_layers.all()
-                if all_layers.exists():
-                    all_layers.delete()
-                extract_dxf(self)
+                    # we have eveything we need, go ahead!
+                    extract_dxf(self, doc)
+                return
+        # check if something changed
+        if (
+            self.__original_dxf != self.dxf
+            or self.__original_geom != self.geom
+            or self.__original_designx != self.designx
+            or self.__original_designy != self.designy
+            or self.__original_rotation != self.rotation
+        ):
+            all_layers = self.related_layers.all()
+            if all_layers.exists():
+                all_layers.delete()
+            extract_dxf(self)
 
     def write_csv(self, writer):
         writer_data = []
