@@ -426,14 +426,15 @@ def fake_geodata(drawing, geodata, utm_wcs, rot):
     return geodata
 
 
-def extract_dxf(drawing):
+def extract_dxf(drawing, doc=None):
     # following conditional for test to work
     if isinstance(drawing.geom, str):
         drawing.geom = json.loads(drawing.geom)
     # prepare transformers
     world2utm, utm2world, utm_wcs, rot = prepare_transformers(drawing)
     # get DXF
-    doc = ezdxf.readfile(drawing.dxf.path)
+    if not doc:
+        doc = ezdxf.readfile(drawing.dxf.path)
     msp = doc.modelspace()
     geodata = msp.get_geodata()
     if not geodata:
