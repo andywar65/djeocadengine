@@ -44,9 +44,31 @@
       <a id="list-link"
          class="link link-primary"
          href="#"
-         script="on click hide me then show #drawing-list ">
+         script="on click hide me then show #drawing-list">
         {% trans "Show drawings as list" %}
       </a>
+      <div id="drawing-list"
+           style="display: none">
+        <p class="card-text">
+          {% trans "List of drawings"%}
+        </p>
+        <ul>
+          {% for drawing in drawings %}
+            <li>
+              <a class="link primary-link"
+                 hx-get="{% url 'djeocadengine:drawing_detail' pk=drawing.id %}"
+                 hx-target="#nav-card"
+                 hx-push-url="true">
+                {{ drawing.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        <button class="btn-close"
+                title="{% trans 'Dismiss' %}"
+                script="on click hide #drawing-list then show #list-link">
+        </button>
+      </div>
     </div>
   {% endif %}
 </div>
