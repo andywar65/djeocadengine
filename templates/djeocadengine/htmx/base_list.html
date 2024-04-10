@@ -39,5 +39,15 @@
       {% trans "Add drawing" %}
     </a>
   {% endif %}
+  {% if drawings %}
+    <div class="mt-2">
+      <a id="list-link"
+         class="link link-primary"
+         href="#"
+         script="on click hide me then show #drawing-list ">
+        {% trans "Show drawings as list" %}
+      </a>
+    </div>
+  {% endif %}
 </div>
 {% include "djeocadengine/includes/map_data.html" %}
