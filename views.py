@@ -1,8 +1,10 @@
 import csv
 import json
+from typing import Any
 
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models.query import QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -35,8 +37,17 @@ class BaseListView(HxPageTemplateMixin, ListView):
     context_object_name = "drawings"
     template_name = "djeocadengine/htmx/base_list.html"
 
+    def get_queryset(self) -> QuerySet[Any]:
+        qs = Drawing.objects.exclude(epsg=None)
+        return qs
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["unreferenced"] = Drawing.objects.filter(epsg=None)
+        return context
+
     def dispatch(self, request, *args, **kwargs):
-        response = super(BaseListView, self).dispatch(request, *args, **kwargs)
+        response = super().dispatch(request, *args, **kwargs)
         if request.htmx:
             dict = {"refreshCollections": True}
             response["HX-Trigger-After-Swap"] = json.dumps(dict)
