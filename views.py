@@ -26,7 +26,7 @@ from .models import Drawing, Entity, Layer
 class HxPageTemplateMixin:
     """Switches template depending on request.htmx"""
 
-    def get_template_names(self):
+    def get_template_names(self) -> list[str]:
         if not self.request.htmx:
             return [self.template_name.replace("htmx/", "")]
         return [self.template_name]
@@ -69,7 +69,7 @@ class DrawingCreateView(PermissionRequiredMixin, HxPageTemplateMixin, CreateView
             )
             form.instance.image = img
             form.instance.temp_image = None
-        return super(DrawingCreateView, self).form_valid(form)
+        return super().form_valid(form)
 
     def get_success_url(self):
         if not self.object.epsg:
@@ -113,7 +113,7 @@ class DrawingDetailView(HxPageTemplateMixin, DetailView):
     model = Drawing
     template_name = "djeocadengine/htmx/drawing_detail.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         layers = self.object.related_layers.filter(is_block=False)
         id_list = layers.values_list("id", flat=True)
@@ -140,7 +140,7 @@ class DrawingUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = DrawingUpdateForm
     template_name = "djeocadengine/includes/drawing_update.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["layers"] = self.object.related_layers.filter(is_block=False)
         context["blocks"] = self.object.related_layers.filter(is_block=True)
@@ -182,7 +182,7 @@ class LayerDetailView(DetailView):
     template_name = "djeocadengine/htmx/layer_inline.html"
     context_object_name = "layer"
 
-    def get_template_names(self):
+    def get_template_names(self) -> list[str]:
         if not self.request.htmx:
             raise Http404("Request without HTMX headers")
         return [self.template_name]
@@ -194,7 +194,7 @@ class LayerUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = LayerUpdateForm
     template_name = "djeocadengine/htmx/layer_update.html"
 
-    def get_template_names(self):
+    def get_template_names(self) -> list[str]:
         if not self.request.htmx:
             raise Http404("Request without HTMX headers")
         return [self.template_name]
