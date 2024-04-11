@@ -1,0 +1,541 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-11 18:01+0200\n"
+"PO-Revision-Date: 2024-04-11 18:13+0200\n"
+"Last-Translator: andywar65 <andy.war1965@gmail.com>\n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: .\djeocadengine\models.py:28 .\djeocadengine\models.py:238
+msgid "Name"
+msgstr "Nome"
+
+#: .\djeocadengine\models.py:29
+msgid "Name of the drawing"
+msgstr "Nome del disegno"
+
+#: .\djeocadengine\models.py:36
+msgid "Parent Drawing"
+msgstr "Disegno di riferimento"
+
+#: .\djeocadengine\models.py:43
+msgid "Image"
+msgstr "Immagine"
+
+#: .\djeocadengine\models.py:45
+msgid "DXF file"
+msgstr "File DXF"
+
+#: .\djeocadengine\models.py:56
+msgid "Location"
+msgstr "Posizione"
+
+#: .\djeocadengine\models.py:58
+msgid "Design point X..."
+msgstr "Coordinata X..."
+
+#: .\djeocadengine\models.py:62
+msgid "...Y"
+msgstr "… ed Y"
+
+#: .\djeocadengine\models.py:66 .\djeocadengine\models.py:243
+msgid "Rotation"
+msgstr "Rotazione"
+
+#: .\djeocadengine\models.py:70
+msgid "CRS code"
+msgstr "Codice CRS"
+
+#: .\djeocadengine\models.py:76 .\djeocadengine\models.py:293
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_detail.html:5
+msgid "Drawing"
+msgstr "Disegno"
+
+#: .\djeocadengine\models.py:77
+msgid "Drawings"
+msgstr "Disegni"
+
+#: .\djeocadengine\models.py:235
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_inline.html:14
+msgid "ID"
+msgstr ""
+
+#: .\djeocadengine\models.py:236 .\djeocadengine\models.py:313
+#: .\djeocadengine\models.py:342
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_inline.html:12
+msgid "Layer"
+msgstr "Livello"
+
+#: .\djeocadengine\models.py:237 .\djeocadengine\models.py:340
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_inline.html:10
+msgid "Block"
+msgstr "Blocco"
+
+#: .\djeocadengine\models.py:239
+msgid "Surface"
+msgstr "Superficie"
+
+#: .\djeocadengine\models.py:240
+msgid "Perimeter"
+msgstr "Perimetro"
+
+#: .\djeocadengine\models.py:241
+msgid "Height"
+msgstr "Altezza"
+
+#: .\djeocadengine\models.py:242
+msgid "Width"
+msgstr "Larghezza"
+
+#: .\djeocadengine\models.py:244
+msgid "X scale"
+msgstr "Scala in X"
+
+#: .\djeocadengine\models.py:245
+msgid "Y scale"
+msgstr "Scala in Y"
+
+#: .\djeocadengine\models.py:246
+msgid "Latitude"
+msgstr "Latitudine"
+
+#: .\djeocadengine\models.py:247
+msgid "Longitude"
+msgstr "Longitudine"
+
+#: .\djeocadengine\models.py:248
+msgid "Attributes"
+msgstr "Attributi"
+
+#: .\djeocadengine\models.py:296
+msgid "Layer name"
+msgstr "Nome del livello"
+
+#: .\djeocadengine\models.py:301
+msgid "Continuous linetype"
+msgstr "Linea continua"
+
+#: .\djeocadengine\models.py:314
+#: .\djeocadengine\templates\djeocadengine\includes\drawing_update.html:52
+msgid "Layers"
+msgstr "Livelli"
+
+#: .\djeocadengine\models.py:334
+msgid "Entity"
+msgstr "Entità"
+
+#: .\djeocadengine\models.py:335
+msgid "Entities"
+msgstr "Entità"
+
+#: .\djeocadengine\models.py:361 .\djeocadengine\views.py:126
+msgid "Layer - "
+msgstr "Livello - "
+
+#: .\djeocadengine\templates\djeocadengine\htmx\base_list.html:4
+msgid "GeoCAD"
+msgstr ""
+
+#: .\djeocadengine\templates\djeocadengine\htmx\base_list.html:9
+msgid ""
+"\n"
+"        Click on the markers and follow the link\n"
+"        to see the drawings in detail.\n"
+"      "
+msgstr ""
+"\n"
+"        Fai click su un segnalino e segui il link\n"
+"        per vedere i disegni in dettaglio."
+
+#: .\djeocadengine\templates\djeocadengine\htmx\base_list.html:15
+msgid "No drawings yet"
+msgstr "Ancora nessun disegno"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\base_list.html:19
+msgid "There are some unreferenced drawings"
+msgstr "Ci sono dei disegni non georeferenziati"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\base_list.html:39
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_create.html:8
+msgid "Add drawing"
+msgstr "Aggiungi disegno"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\base_list.html:48
+msgid "Show drawings as list"
+msgstr "Mostra una lista dei disegni"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\base_list.html:53
+msgid "List of drawings"
+msgstr "Lista dei disegni"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\base_list.html:68
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_geodata.html:38
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_update.html:18
+#: .\djeocadengine\templates\djeocadengine\includes\drawing_update.html:39
+msgid "Dismiss"
+msgstr "Annulla"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_create.html:17
+msgid "Add"
+msgstr "Aggiungi"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_delete.html:7
+msgid "Deleting..."
+msgstr "Eliminazione..."
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_detail.html:18
+msgid "Back to list"
+msgstr "Torna alla lista"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_detail.html:24
+msgid "Modify drawing"
+msgstr "Modifica disegno"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_detail.html:30
+msgid "Download CSV"
+msgstr "Scarica il CSV"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_detail.html:36
+msgid "Download georeferenced DXF"
+msgstr "Scarica il DXF georeferenziato"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_detail.html:43
+msgid "Are sure you want to delete this drawing?"
+msgstr "Sei sicuro di voler eliminare il disegno?"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_detail.html:44
+msgid "Delete drawing"
+msgstr "Elimina il disegno"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_geodata.html:8
+msgid "Add GeoData to:"
+msgstr "Aggiungi Geodata a:"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_geodata.html:14
+msgid ""
+"\n"
+"          Your DXF cannot be geolocated. If you already uploaded a Drawing "
+"with equal geolocation,\n"
+"          click on the Parent button. Otherwise you must manually enter the "
+"geolocation.\n"
+"        "
+msgstr ""
+"\n"
+"          Il tuo DXF non è georeferenziato. Se hai già caricato un disegno "
+"con uguale georeferenziazione,\n"
+"          fai click su Disegno di riferimento. Altrimenti devi inserire la "
+"georeferenziazione manualmente."
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_geodata.html:21
+msgid "Parent"
+msgstr "Disegno di riferimento"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_geodata.html:25
+msgid "Enter manually"
+msgstr "Inserimento manuale"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\drawing_geodata.html:34
+msgid "Add Parent"
+msgstr "Aggiungi disegno di riferimento"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_delete.html:4
+msgid "Layer deleted"
+msgstr "Livello eliminato"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_inline.html:15
+msgid "Color"
+msgstr "Colore"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_inline.html:21
+msgid "Modify"
+msgstr "Modifica"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_inline.html:28
+msgid "Are you sure you want to delete this layer"
+msgstr "Sei sicuro di voler eliminare questo livello"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_inline.html:29
+msgid "Delete"
+msgstr "Elimina"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_update.html:6
+msgid "Update layer"
+msgstr "Aggiorna livello"
+
+#: .\djeocadengine\templates\djeocadengine\htmx\layer_update.html:15
+msgid "Change Layer"
+msgstr "Modifica il livello"
+
+#: .\djeocadengine\templates\djeocadengine\includes\drawing_manual.html:13
+#: .\djeocadengine\templates\djeocadengine\includes\drawing_manual.html:40
+msgid "Add GeoData"
+msgstr "Aggiungi GeoData"
+
+#: .\djeocadengine\templates\djeocadengine\includes\drawing_manual.html:18
+msgid ""
+"\n"
+"                No Geodata found in DXF, you must insert it manually.\n"
+"                On the map draw a marker corresponding to a geolocated DXF "
+"point.\n"
+"                In X and Y enter the coordinates of this point in DXF units "
+"(it defaults to WCS origin).\n"
+"                Rotation is the angle you need to rotate the drawing to "
+"orient it\n"
+"                correctly to True North (angle in degrees, counterclockwise "
+"is positive).\n"
+"              "
+msgstr ""
+"\n"
+"          Non ci sono Geodata nel DXF, devi inserirli manualmente.\n"
+"          Sulla mappa inserisci un marker in corrispondenza di un punto "
+"geolocalizzato del DXF.\n"
+"In X ed Y inserisci le coordinate di detto punto in unità DXF (di default è "
+"l'origine degli assi).\n"
+"          La Rotazione è l'angolo necessario a ruotare il disegno in modo da "
+"orientarlo\n"
+"          correttamente verso il Nord geografico (angolo in gradi, il senso "
+"antiorario è positivo)."
+
+#: .\djeocadengine\templates\djeocadengine\includes\drawing_update.html:14
+msgid "Update drawing"
+msgstr "Aggiorna il disegno"
+
+#: .\djeocadengine\templates\djeocadengine\includes\drawing_update.html:37
+msgid "Update"
+msgstr "Aggiorna"
+
+#: .\djeocadengine\templates\djeocadengine\includes\drawing_update.html:60
+msgid "Blocks"
+msgstr "Blocchi"
+
+#: .\djeocadengine\urls.py:23
+msgid "drawing/add/"
+msgstr "disegno/aggiungi/"
+
+#: .\djeocadengine\urls.py:28
+msgid "drawing/<pk>/"
+msgstr "disegno/<pk>/"
+
+#: .\djeocadengine\urls.py:33
+msgid "drawing/<pk>/geodata"
+msgstr "disegno/<pk>/geodata"
+
+#: .\djeocadengine\urls.py:38
+msgid "drawing/<pk>/manual"
+msgstr "disegno/<pk>/manuale"
+
+#: .\djeocadengine\urls.py:43
+msgid "drawing/<pk>/update"
+msgstr "disegno/<pk>/modifica"
+
+#~ msgid "Author"
+#~ msgstr "Autore"
+
+#~ msgid "Description"
+#~ msgstr "Descrizione"
+
+#~ msgid "Refresh DXF file from layers"
+#~ msgstr "Aggiorna il file DXF partendo dai livelli"
+
+#~ msgid "Author - "
+#~ msgstr "Autore - "
+
+#~ msgid "Block definition"
+#~ msgstr "Definizione del blocco"
+
+#~ msgid "Discard"
+#~ msgstr "Annulla"
+
+#~ msgid "All authors"
+#~ msgstr "Tutti gli autori"
+
+#~ msgid "Authors"
+#~ msgstr "Autori"
+
+#~ msgid "No authors yet"
+#~ msgstr "Ancora nessun autore"
+
+#~ msgid "Modify layers"
+#~ msgstr "Modifica i livelli"
+
+#~ msgid "Modify blocks"
+#~ msgstr "Modifica i blocchi"
+
+#~ msgid "Instance"
+#~ msgstr "Istanza"
+
+#~ msgid "Are you sure you want to explode this block instance?"
+#~ msgstr "Sei sicuro di voler esplodere questa istanza di un blocco?"
+
+#~ msgid "Explode block instance to insertion layer"
+#~ msgstr "Esplodi l'istanza del blocco sul livello di inserimento"
+
+#~ msgid "Are you sure you want to delete this block instance?"
+#~ msgstr "Sei sicuro di voler eliminare questa istanza di un blocco?"
+
+#~ msgid "Are you sure you want to delete this layer / block?"
+#~ msgstr "Sei sicuro di voler eliminare questo livello / blocco?"
+
+#~ msgid "Other actions"
+#~ msgstr "Altre azioni"
+
+#~ msgid "Create instance of block"
+#~ msgstr "Crea un'istanza del blocco"
+
+#~ msgid "Modify block"
+#~ msgstr "Modifica il blocco"
+
+#~ msgid "Update insertion"
+#~ msgstr "Aggiorna l'inserzione"
+
+#~ msgid "Explode insertion"
+#~ msgstr "Esplodi l'inserzione"
+
+#~ msgid "Delete insertion"
+#~ msgstr "Elimina l'inserzione"
+
+#~ msgid "Update block"
+#~ msgstr "Aggiorna il blocco"
+
+#~ msgid "Add instance"
+#~ msgstr "Aggiungi istanza"
+
+#~ msgid "Transform layer to block"
+#~ msgstr "Trasforma livello in blocco"
+
+#~ msgid "Delete layer / block"
+#~ msgstr "Elimina il livello / blocco"
+
+#~ msgid "Instances"
+#~ msgstr "Istanze"
+
+#~ msgid "No instances yet"
+#~ msgstr "Ancora nessuna istanza"
+
+#~ msgid "Delete / explode insertion"
+#~ msgstr "Elimina /esplodi l'inserzione"
+
+#~ msgid "Are you sure you want to delete / explode insertion"
+#~ msgstr "Sei sicuro di voler eliminare / esplodere l'inserzione"
+
+#~ msgid "Delete block"
+#~ msgstr "Elimina il blocco"
+
+#~ msgid "Delete layer"
+#~ msgstr "Elimina livello"
+
+#~ msgid "Are you sure you want to delete layer / block"
+#~ msgstr "Sei sicuro di voler eliminare il livello / blocco"
+
+#~ msgid "<username>/drawing/add/"
+#~ msgstr "<username>/disegno/aggiungi/"
+
+#~ msgid "<username>/drawing/<pk>/"
+#~ msgstr "<username>/disegno/<pk>/"
+
+#~ msgid "<username>/drawing/<pk>/geodata/"
+#~ msgstr "<username>/disegno/<pk>/geodata/"
+
+#~ msgid "<username>/drawing/<pk>/update/"
+#~ msgstr "<username>/disegno/<pk>/aggiorna/"
+
+#~ msgid "<username>/drawing/<pk>/delete/"
+#~ msgstr "<username>/disegno/<pk>/elimina/"
+
+#~ msgid "<username>/drawing/<pk>/layer/add/"
+#~ msgstr "<username>/disegno/<pk>/livello/aggiungi/"
+
+#~ msgid "<username>/layer/<pk>/update/"
+#~ msgstr "<username>/livello/<pk>/aggiorna/"
+
+#~ msgid "<username>/layer/<pk>/to/block/"
+#~ msgstr "<username>/livello/<pk>/in/blocco/"
+
+#~ msgid "<username>/layer/<pk>/delete/"
+#~ msgstr "<username>/livello/<pk>/elimina/"
+
+#~ msgid "<username>/block/<pk>/instance/add/"
+#~ msgstr "<username>/blocco/<pk>/aggiungi/istanza/"
+
+#~ msgid "<username>/block-instance/<pk>/update/"
+#~ msgstr "<username>/istanza/<pk>/aggiorna/"
+
+#~ msgid "<username>/block-instance/<pk>/delete/"
+#~ msgstr "<username>/istanza/<pk>/elimina/"
+
+#~ msgid "<username>/block-instance/<pk>/explode/"
+#~ msgstr "<username>/istanza/<pk>/esplodi/"
+
+#~ msgid "drawing/<pk>/download/"
+#~ msgstr "disegno/<pk>/download/"
+
+#~ msgid "Drawing does not belong to User"
+#~ msgstr "Il disegno non appartiene all'utente"
+
+#~ msgid "Can't delete layer '0'"
+#~ msgstr "Non si può cancellare il livello '0'"
+
+#~ msgid "Layer is not a block"
+#~ msgstr "Il livello non è un blocco"
+
+#, python-format
+#~ msgid "Insertion \"%d\" deleted"
+#~ msgstr "Inserimento \"%d\" eliminato"
+
+#, python-format
+#~ msgid "Insertion \"%d\" exploded"
+#~ msgstr "Inserimento \"%d\" esploso"
+
+#~ msgid "Back to drawing"
+#~ msgstr "Torna al disegno"
+
+#~ msgid "<username>/layer/<pk>/"
+#~ msgstr "<username>/livello/<pk>/"
+
+#~ msgid "Layer does not belong to User"
+#~ msgstr "Il livello non appartiene all'utente"
+
+#~ msgid "Layers / Blocks"
+#~ msgstr "Livelli / Blocchi"
+
+#~ msgid ""
+#~ "\n"
+#~ "          Insert Title and a short description. Choose a DXF file (ASCII "
+#~ "type). Eventual geodata\n"
+#~ "          will be misregarded. On the map insert the WCS origin of the "
+#~ "drawing.\n"
+#~ "          Choose the origin wisely, i.e. a building cornerstone. Insert "
+#~ "rotation of drawing\n"
+#~ "          with respect to True North (counterclockwise is positive).\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "          Inserisci il titolo e una breve descrizione. Scegli un file DXF "
+#~ "(tipo ASCII). Geodata eventuali\n"
+#~ "          non saranno considerati. Sulla mappa inserisci l'origine degli "
+#~ "assi del disegno (WCS).\n"
+#~ "          Scegli l'origine degli assi in modo consono, p. es. l'angolo di "
+#~ "un edificio. Inserisci la rotazione\n"
+#~ "          del disegno rispetto al Nord reale (il senso antiorario è "
+#~ "positivo)."
+
+#~ msgid "author/<username>/"
+#~ msgstr "autore/<username>/"
+
+#~ msgid "Cancel"
+#~ msgstr "Annulla"
+
+#~ msgid "Elements"
+#~ msgstr "Elementi"
