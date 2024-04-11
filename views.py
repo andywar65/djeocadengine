@@ -23,7 +23,7 @@ from .forms import (
 from .models import Drawing, Entity, Layer
 
 
-class HxSwitchTemplateMixin:
+class HxTemplateMixin:
     """Switches template depending on request.htmx"""
 
     def get_template_names(self) -> list[str]:
@@ -32,7 +32,7 @@ class HxSwitchTemplateMixin:
         return [self.template_name]
 
 
-class HxOnlySetupMixin:
+class HxSetupMixin:
     """Restricts to HTMX requests"""
 
     def setup(self, request, *args, **kwargs):
@@ -41,7 +41,7 @@ class HxOnlySetupMixin:
         super().setup(request, *args, **kwargs)
 
 
-class BaseListView(HxSwitchTemplateMixin, ListView):
+class BaseListView(HxTemplateMixin, ListView):
     model = Drawing
     context_object_name = "drawings"
     template_name = "djeocadengine/htmx/base_list.html"
@@ -63,7 +63,7 @@ class BaseListView(HxSwitchTemplateMixin, ListView):
         return response
 
 
-class DrawingCreateView(PermissionRequiredMixin, HxSwitchTemplateMixin, CreateView):
+class DrawingCreateView(PermissionRequiredMixin, HxTemplateMixin, CreateView):
     model = Drawing
     permission_required = "djeocadengine.add_drawing"
     form_class = DrawingCreateForm
@@ -92,7 +92,7 @@ class DrawingCreateView(PermissionRequiredMixin, HxSwitchTemplateMixin, CreateVi
         )
 
 
-class DrawingGeodataView(PermissionRequiredMixin, HxSwitchTemplateMixin, UpdateView):
+class DrawingGeodataView(PermissionRequiredMixin, HxTemplateMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
     template_name = "djeocadengine/htmx/drawing_geodata.html"
@@ -105,7 +105,7 @@ class DrawingGeodataView(PermissionRequiredMixin, HxSwitchTemplateMixin, UpdateV
         )
 
 
-class DrawingManualView(PermissionRequiredMixin, HxSwitchTemplateMixin, UpdateView):
+class DrawingManualView(PermissionRequiredMixin, HxTemplateMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
     template_name = "djeocadengine/includes/drawing_manual.html"
@@ -118,7 +118,7 @@ class DrawingManualView(PermissionRequiredMixin, HxSwitchTemplateMixin, UpdateVi
         )
 
 
-class DrawingDetailView(HxSwitchTemplateMixin, DetailView):
+class DrawingDetailView(HxTemplateMixin, DetailView):
     model = Drawing
     template_name = "djeocadengine/htmx/drawing_detail.html"
 
@@ -186,13 +186,13 @@ def drawing_delete_view(request, pk):
     )
 
 
-class LayerDetailView(HxOnlySetupMixin, DetailView):
+class LayerDetailView(HxSetupMixin, DetailView):
     model = Layer
     template_name = "djeocadengine/htmx/layer_inline.html"
     context_object_name = "layer"
 
 
-class LayerUpdateView(PermissionRequiredMixin, HxOnlySetupMixin, UpdateView):
+class LayerUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
     permission_required = "djeocadengine.change_layer"
     model = Layer
     form_class = LayerUpdateForm
