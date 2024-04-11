@@ -23,7 +23,7 @@ from .forms import (
 from .models import Drawing, Entity, Layer
 
 
-class HxPageTemplateMixin:
+class HxSwitchTemplateMixin:
     """Switches template depending on request.htmx"""
 
     def get_template_names(self) -> list[str]:
@@ -32,7 +32,7 @@ class HxPageTemplateMixin:
         return [self.template_name]
 
 
-class BaseListView(HxPageTemplateMixin, ListView):
+class BaseListView(HxSwitchTemplateMixin, ListView):
     model = Drawing
     context_object_name = "drawings"
     template_name = "djeocadengine/htmx/base_list.html"
@@ -54,7 +54,7 @@ class BaseListView(HxPageTemplateMixin, ListView):
         return response
 
 
-class DrawingCreateView(PermissionRequiredMixin, HxPageTemplateMixin, CreateView):
+class DrawingCreateView(PermissionRequiredMixin, HxSwitchTemplateMixin, CreateView):
     model = Drawing
     permission_required = "djeocadengine.add_drawing"
     form_class = DrawingCreateForm
@@ -83,7 +83,7 @@ class DrawingCreateView(PermissionRequiredMixin, HxPageTemplateMixin, CreateView
         )
 
 
-class DrawingGeodataView(PermissionRequiredMixin, HxPageTemplateMixin, UpdateView):
+class DrawingGeodataView(PermissionRequiredMixin, HxSwitchTemplateMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
     template_name = "djeocadengine/htmx/drawing_geodata.html"
@@ -96,7 +96,7 @@ class DrawingGeodataView(PermissionRequiredMixin, HxPageTemplateMixin, UpdateVie
         )
 
 
-class DrawingManualView(PermissionRequiredMixin, HxPageTemplateMixin, UpdateView):
+class DrawingManualView(PermissionRequiredMixin, HxSwitchTemplateMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
     template_name = "djeocadengine/includes/drawing_manual.html"
@@ -109,7 +109,7 @@ class DrawingManualView(PermissionRequiredMixin, HxPageTemplateMixin, UpdateView
         )
 
 
-class DrawingDetailView(HxPageTemplateMixin, DetailView):
+class DrawingDetailView(HxSwitchTemplateMixin, DetailView):
     model = Drawing
     template_name = "djeocadengine/htmx/drawing_detail.html"
 
