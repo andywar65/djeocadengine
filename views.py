@@ -32,6 +32,15 @@ class HxSwitchTemplateMixin:
         return [self.template_name]
 
 
+class HxOnlySetupMixin:
+    """Restricts to HTMX requests"""
+
+    def setup(self, request, *args, **kwargs):
+        if not request.htmx:
+            raise Http404("Request without HTMX headers")
+        super().setup(request, *args, **kwargs)
+
+
 class BaseListView(HxSwitchTemplateMixin, ListView):
     model = Drawing
     context_object_name = "drawings"
@@ -177,27 +186,17 @@ def drawing_delete_view(request, pk):
     )
 
 
-class LayerDetailView(DetailView):
+class LayerDetailView(HxOnlySetupMixin, DetailView):
     model = Layer
     template_name = "djeocadengine/htmx/layer_inline.html"
     context_object_name = "layer"
 
-    def get_template_names(self) -> list[str]:
-        if not self.request.htmx:
-            raise Http404("Request without HTMX headers")
-        return [self.template_name]
 
-
-class LayerUpdateView(PermissionRequiredMixin, UpdateView):
+class LayerUpdateView(PermissionRequiredMixin, HxOnlySetupMixin, UpdateView):
     permission_required = "djeocadengine.change_layer"
     model = Layer
     form_class = LayerUpdateForm
     template_name = "djeocadengine/htmx/layer_update.html"
-
-    def get_template_names(self) -> list[str]:
-        if not self.request.htmx:
-            raise Http404("Request without HTMX headers")
-        return [self.template_name]
 
     def get_success_url(self):
         return reverse(
