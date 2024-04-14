@@ -4,6 +4,7 @@ from math import atan2, cos, degrees, radians, sin
 import ezdxf
 import nh3
 from colorfield.fields import ColorField
+from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
@@ -82,10 +83,8 @@ class Drawing(models.Model):
     __original_designy = None
     __original_rotation = None
     # blacklists in settings?
-    layer_blacklist = [
-        "Defpoints",
-    ]
-    name_blacklist = ["*Model_Space", "DynamicInputDot"]
+    layer_blacklist = settings.CAD_LAYER_BLACKLIST
+    name_blacklist = settings.CAD_BLOCK_BLACKLIST
     entity_types = [
         "POINT",
         "LINE",

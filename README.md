@@ -11,6 +11,7 @@ See `requirements.in` for required libraries. In your project root type `git clo
     "DEFAULT_ZOOM": 10,
     "RESET_VIEW": False,
 }`.
+Add two lists to `settings.py`, `CAD_BLOCK_BLACKLIST = []` and `CAD_LAYER_BLACKLIST = []`, where you can store names of layers and blocks you don't want to be processed.
 ## View drawings
 On the navigation bar look for `Documents/GeoCAD`. You will be presented with a `List of all drawings`, where drawings are just markers on the map. Click on a marker and follow the link in the popup: you will land on the `Drawing Detail` page, with layers displayed on the map. Layers may be switched on and off.
 ## Create drawings
