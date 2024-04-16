@@ -120,8 +120,9 @@ class Drawing(models.Model):
             "djeocadengine:drawing_detail",
             kwargs={"pk": self.id},
         )
-        title_str = (
-            '<a class="link link-primary" href="%(url)s"><strong>%(title)s</strong></a>'
+        title_str = '<a class="link link-primary" href="#" '
+        title_str += (
+            "onclick=\"openDrawing('%(url)s')\"><strong>%(title)s</strong></a>"
             % {
                 "title": self.title,
                 "url": url,

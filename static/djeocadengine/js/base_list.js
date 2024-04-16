@@ -63,3 +63,7 @@ function map_init(map, options) {
       getCollections();
     })
   }
+
+  function openDrawing(path) {
+    htmx.ajax('GET', path, '#nav-card')
+  }
