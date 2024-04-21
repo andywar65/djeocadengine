@@ -114,12 +114,12 @@ class Drawing(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse("djeocadengine:drawing_detail", kwargs={"pk": self.id})
+
     @property
     def popupContent(self):
-        url = reverse(
-            "djeocadengine:drawing_detail",
-            kwargs={"pk": self.id},
-        )
+        url = self.get_absolute_url()
         title_str = '<a class="link link-primary" href="#" '
         title_str += (
             "onclick=\"openDrawing('%(url)s')\"><strong>%(title)s</strong></a>"

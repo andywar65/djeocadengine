@@ -140,6 +140,7 @@ class DrawingDetailView(HxTemplateMixin, DetailView):
         if request.htmx:
             dict = {"refreshCollections": True}
             response["HX-Trigger-After-Swap"] = json.dumps(dict)
+            response["HX-Push-Url"] = self.object.get_absolute_url()
         return response
 
 
