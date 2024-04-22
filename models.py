@@ -490,7 +490,8 @@ def extract_dxf(drawing, doc=None, refresh=False):
                                     else:
                                         entity_data["Name"] = t.text
                                     break
-                        entity_data["Surface"] = round(poly.area, 2)
+                        if e.is_closed:
+                            entity_data["Surface"] = round(poly.area, 2)
                         if e.dxf.thickness:
                             entity_data["Height"] = round(e.dxf.thickness, 2)
                         entity_data["Perimeter"] = round(poly.length, 2)
