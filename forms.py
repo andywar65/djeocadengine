@@ -1,7 +1,6 @@
 from django.forms import ModelForm
-from leaflet.forms.widgets import LeafletWidget
-
 from djeocadengine.models import Drawing, Layer
+from leaflet.forms.widgets import LeafletWidget
 
 
 class DrawingCreateForm(ModelForm):
