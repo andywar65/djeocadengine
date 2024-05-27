@@ -105,7 +105,7 @@ class DrawingGeodataView(PermissionRequiredMixin, HxTemplateMixin, UpdateView):
         )
 
 
-class DrawingManualView(PermissionRequiredMixin, HxTemplateMixin, UpdateView):
+class DrawingManualView(PermissionRequiredMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
     template_name = "djeocadengine/includes/drawing_manual.html"
