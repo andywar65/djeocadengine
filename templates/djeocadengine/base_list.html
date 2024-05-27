@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load leaflet_tags %}
+{% load partials %}
 
 {% block extra-head %}
   {% leaflet_js %}
@@ -18,7 +19,7 @@
     <div class="col" style="margin-bottom: 20px">
       <div class="card" id="nav-card">
         {% block nav-card %}
-          {% include "djeocadengine/htmx/base_list.html" %}
+          {% partial htmx-partial %}
         {% endblock nav-card %}
       </div>
     </div>
@@ -28,3 +29,7 @@
     </div>
   </div>
 {% endblock content %}
+
+{% partialdef htmx-partial %}
+  {% include "djeocadengine/htmx/base_list.html" %}
+{% endpartialdef %}

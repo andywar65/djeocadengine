@@ -1,5 +1,10 @@
 {% extends "base.html" %}
+{% load partials %}
 
 {% block content %}
-  {% include "djeocadengine/htmx/drawing_geodata.html" %}
+  {% partial htmx-partial %}
 {% endblock content %}
+
+{% partialdef htmx-partial %}
+  {% include "djeocadengine/htmx/drawing_geodata.html" %}
+{% endpartialdef %}

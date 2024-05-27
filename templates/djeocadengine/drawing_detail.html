@@ -1,5 +1,10 @@
 {% extends "djeocadengine/base_list.html" %}
+{% load partials %}
 
 {% block nav-card %}
-  {% include "djeocadengine/htmx/drawing_detail.html" %}
+  {% partial htmx-partial %}
 {% endblock nav-card %}
+
+{% partialdef htmx-partial %}
+  {% include "djeocadengine/htmx/drawing_detail.html" %}
+{% endpartialdef %}

@@ -27,8 +27,8 @@ class HxTemplateMixin:
     """Switches template depending on request.htmx"""
 
     def get_template_names(self) -> list[str]:
-        if not self.request.htmx:
-            return [self.template_name.replace("htmx/", "")]
+        if self.request.htmx:
+            return [self.template_name + "#htmx-partial"]
         return [self.template_name]
 
 
@@ -44,7 +44,7 @@ class HxSetupMixin:
 class BaseListView(HxTemplateMixin, ListView):
     model = Drawing
     context_object_name = "drawings"
-    template_name = "djeocadengine/htmx/base_list.html"
+    template_name = "djeocadengine/base_list.html"
 
     def get_queryset(self) -> QuerySet[Any]:
         qs = Drawing.objects.exclude(epsg=None)
@@ -67,7 +67,7 @@ class DrawingCreateView(PermissionRequiredMixin, HxTemplateMixin, CreateView):
     model = Drawing
     permission_required = "djeocadengine.add_drawing"
     form_class = DrawingCreateForm
-    template_name = "djeocadengine/htmx/drawing_create.html"
+    template_name = "djeocadengine/drawing_create.html"
 
     def form_valid(self, form):
         if form.cleaned_data["temp_image"]:
@@ -95,7 +95,7 @@ class DrawingCreateView(PermissionRequiredMixin, HxTemplateMixin, CreateView):
 class DrawingGeodataView(PermissionRequiredMixin, HxTemplateMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
-    template_name = "djeocadengine/htmx/drawing_geodata.html"
+    template_name = "djeocadengine/drawing_geodata.html"
     form_class = DrawingParentForm
 
     def get_success_url(self):
@@ -120,7 +120,7 @@ class DrawingManualView(PermissionRequiredMixin, UpdateView):
 
 class DrawingDetailView(HxTemplateMixin, DetailView):
     model = Drawing
-    template_name = "djeocadengine/htmx/drawing_detail.html"
+    template_name = "djeocadengine/drawing_detail.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
