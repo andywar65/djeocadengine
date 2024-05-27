@@ -8,3 +8,4 @@ django-colorfield
 pyproj
 shapely
 nh3
+django-template-partials
