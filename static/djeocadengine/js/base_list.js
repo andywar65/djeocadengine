@@ -51,7 +51,8 @@ function getCollections() {
   if (collection.features.length !== 0) {
     map.fitBounds(L.geoJson(collection).getBounds(), {padding: [30,30]});
   } else {
-    map.setView([0,0], 2)
+    let lc = JSON.parse(document.getElementById("leaflet_config").textContent);
+    map.setView(lc.DEFAULT_CENTER, lc.DEFAULT_ZOOM)
   }
   collection = JSON.parse(document.getElementById("line_data").textContent);
   if (collection !== null) {

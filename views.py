@@ -2,6 +2,7 @@ import csv
 import json
 from typing import Any
 
+from django.conf import settings
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models.query import QuerySet
@@ -53,6 +54,7 @@ class BaseListView(HxTemplateMixin, ListView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["unreferenced"] = Drawing.objects.filter(epsg=None)
+        context["leaflet_config"] = settings.LEAFLET_CONFIG
         return context
 
     def dispatch(self, request, *args, **kwargs):
