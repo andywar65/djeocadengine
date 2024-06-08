@@ -1,5 +1,4 @@
-from django.contrib import admin  # noqa
-from leaflet.admin import LeafletGeoAdmin
+from django.contrib import admin
 
 from .models import Drawing, Layer
 
@@ -11,9 +10,9 @@ class LayerInline(admin.TabularInline):
 
 
 @admin.register(Drawing)
-class DrawingAdmin(LeafletGeoAdmin):
+class DrawingAdmin(admin.ModelAdmin):
     list_display = ("title",)
-    exclude = ("temp_image",)
+    exclude = ("temp_image", "geom")
     inlines = [
         LayerInline,
     ]
