@@ -34,8 +34,7 @@
   {% if user.is_authenticated %}
     <a class="btn btn-primary"
        hx-get="{% url 'djeocadengine:drawing_create' %}"
-       hx-target="#content"
-       hx-push-url="true">
+       hx-target="#nav-card">
       {% trans "Add drawing" %}
     </a>
   {% endif %}

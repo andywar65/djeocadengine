@@ -65,11 +65,11 @@ class BaseListView(HxTemplateMixin, ListView):
         return response
 
 
-class DrawingCreateView(PermissionRequiredMixin, HxTemplateMixin, CreateView):
+class DrawingCreateView(PermissionRequiredMixin, HxSetupMixin, CreateView):
     model = Drawing
     permission_required = "djeocadengine.add_drawing"
     form_class = DrawingCreateForm
-    template_name = "djeocadengine/drawing_create.html"
+    template_name = "djeocadengine/htmx/drawing_create.html"
 
     def form_valid(self, form):
         if form.cleaned_data["temp_image"]:
