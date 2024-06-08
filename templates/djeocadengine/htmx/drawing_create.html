@@ -14,7 +14,7 @@
     <button class="btn btn-primary"
             hx-post="{% url 'djeocadengine:drawing_create' %}"
             hx-target="#nav-card"
-            hx-enctype="multipart/form-data">
+            hx-encoding="multipart/form-data">
       {% trans 'Add' %}
     </button>
   </form>

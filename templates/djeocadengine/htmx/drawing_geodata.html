@@ -2,42 +2,42 @@
 {% load i18n %}
 
 
-<div class="card mx-auto" style="max-width: 480px;">
-  <div class="card-header">
-    <h4 class="card-title">
-      {% trans "Add GeoData to:"%} {{ object.title }}
-    </h4>
+<div class="card-header">
+  <h4 class="card-title">
+    {% trans "Add GeoData to:"%} {{ object.title }}
+  </h4>
+</div>
+<div class="card-body">
+  <div id="geodata-buttons">
+    <p class="card-text">
+      {% blocktrans %}
+        Your DXF cannot be geolocated. If you already uploaded a Drawing with equal geolocation,
+        click on the Parent button. Otherwise you must manually enter the geolocation.
+      {% endblocktrans %}
+    </p>
+    <button class="btn btn-primary"
+            script="on click hide #geodata-buttons then show #parent-form">
+      {% trans "Parent" %}
+    </button>
+    <button class="btn btn-primary"
+            hx-get="{% url 'djeocadengine:drawing_manual' pk=object.id %}"
+            hx-target="#nav-card">
+      {% trans "Enter manually"%}
+    </button>
   </div>
-  <div class="card-body">
-    <div id="geodata-buttons">
-      <p class="card-text">
-        {% blocktrans %}
-          Your DXF cannot be geolocated. If you already uploaded a Drawing with equal geolocation,
-          click on the Parent button. Otherwise you must manually enter the geolocation.
-        {% endblocktrans %}
-      </p>
+  <div id="parent-form" style="display: none">
+    <form>
+      {% csrf_token %}
+      {{ form|crispy }}
       <button class="btn btn-primary"
-              script="on click hide #geodata-buttons then show #parent-form">
-        {% trans "Parent" %}
+              hx-post="{% url 'djeocadengine:drawing_geodata' pk=object.id %}"
+              hx-target="#nav-card">
+        {% trans 'Add Parent' %}
       </button>
-      <a class="btn btn-primary"
-         href="{% url 'djeocadengine:drawing_manual' pk=object.id %}">
-        {% trans "Enter manually"%}
-      </a>
-    </div>
-    <div id="parent-form" style="display: none">
-      <form method="POST" action="">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button class="btn btn-primary"
-                type="submit">
-          {% trans 'Add Parent' %}
-        </button>
-      </form>
-      <button class="btn-close"
-              title="{% trans 'Dismiss' %}"
-              script="on click hide #parent-form then show #geodata-buttons">
-      </button>
-    </div>
+    </form>
+    <button class="btn-close"
+            title="{% trans 'Dismiss' %}"
+            script="on click hide #parent-form then show #geodata-buttons">
+    </button>
   </div>
 </div>

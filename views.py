@@ -94,10 +94,10 @@ class DrawingCreateView(PermissionRequiredMixin, HxSetupMixin, CreateView):
         )
 
 
-class DrawingGeodataView(PermissionRequiredMixin, HxTemplateMixin, UpdateView):
+class DrawingGeodataView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
-    template_name = "djeocadengine/drawing_geodata.html"
+    template_name = "djeocadengine/htmx/drawing_geodata.html"
     form_class = DrawingParentForm
 
     def get_success_url(self):
