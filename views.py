@@ -172,6 +172,7 @@ class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
+        context["drawings"] = self.object
         context["layers"] = self.object.related_layers.filter(is_block=False)
         context["blocks"] = self.object.related_layers.filter(is_block=True)
         return context
@@ -192,6 +193,12 @@ class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
             "djeocadengine:drawing_detail",
             kwargs={"pk": self.object.id},
         )
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        dict = {"refreshCollections": True}
+        response["HX-Trigger-After-Swap"] = json.dumps(dict)
+        return response
 
 
 @permission_required("djeocadengine.delete_drawing")
