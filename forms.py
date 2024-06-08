@@ -1,6 +1,6 @@
 from django.forms import ModelForm
+
 from djeocadengine.models import Drawing, Layer
-from leaflet.forms.widgets import LeafletWidget
 
 
 class DrawingCreateForm(ModelForm):
@@ -23,13 +23,6 @@ class DrawingManualForm(ModelForm):
     class Meta:
         model = Drawing
         fields = ["geom", "designx", "designy", "rotation"]
-        widgets = {
-            "geom": LeafletWidget(
-                attrs={
-                    "geom_type": "Point",
-                }
-            )
-        }
 
     class Media:
         js = ("djeocadengine/js/locate_user.js",)
@@ -47,13 +40,6 @@ class DrawingUpdateForm(ModelForm):
             "designy",
             "rotation",
         ]
-        widgets = {
-            "geom": LeafletWidget(
-                attrs={
-                    "geom_type": "Point",
-                }
-            )
-        }
 
 
 class LayerUpdateForm(ModelForm):
