@@ -22,7 +22,7 @@ class DrawingParentForm(ModelForm):
 class DrawingManualForm(ModelForm):
     class Meta:
         model = Drawing
-        fields = ["designx", "designy", "rotation"]
+        fields = ["lat", "long", "designx", "designy", "rotation"]
 
     class Media:
         js = ("djeocadengine/js/locate_user.js",)
@@ -35,6 +35,8 @@ class DrawingUpdateForm(ModelForm):
             "title",
             "dxf",
             "temp_image",
+            "lat",
+            "long",
             "designx",
             "designy",
             "rotation",

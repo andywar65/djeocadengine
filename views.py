@@ -107,17 +107,35 @@ class DrawingGeodataView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
         )
 
 
-class DrawingManualView(PermissionRequiredMixin, UpdateView):
+class DrawingManualView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
-    template_name = "djeocadengine/includes/drawing_manual.html"
+    template_name = "djeocadengine/htmx/drawing_manual.html"
     form_class = DrawingManualForm
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["markers"] = Drawing.objects.none()
+        context["leaflet_config"] = settings.LEAFLET_CONFIG
+        return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["lat"] = settings.LEAFLET_CONFIG["DEFAULT_CENTER"][0]
+        initial["long"] = settings.LEAFLET_CONFIG["DEFAULT_CENTER"][1]
+        return initial
 
     def get_success_url(self):
         return reverse(
             "djeocadengine:drawing_detail",
             kwargs={"pk": self.object.id},
         )
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        dict = {"refreshCollections": True}
+        response["HX-Trigger-After-Swap"] = json.dumps(dict)
+        return response
 
 
 class DrawingDetailView(HxTemplateMixin, DetailView):

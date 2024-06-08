@@ -22,8 +22,7 @@
           <li>
             <a class="link alert-link"
                hx-get="{% url 'djeocadengine:drawing_geodata' pk=unref.id %}"
-               hx-target="#content"
-               hx-push-url="true">
+               hx-target="#nav-card">
               {{ unref.title }}
             </a>
           </li>
