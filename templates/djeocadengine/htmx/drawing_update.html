@@ -1,0 +1,64 @@
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load thumbnail %}
+
+<div class="card-header">
+  <h4 class="card-title">
+    {% trans "Update drawing"%}: {{ object }}
+  </h4>
+</div>
+<div class="card-body">
+  {% if object.image %}
+    <img class="card-img-top"
+         src="{% thumbnail object.image 480x240 crop %}"
+         alt="{{ object.title }}">
+  {% endif %}
+  <form>
+    {% csrf_token %}
+    {{ form.title|as_crispy_field }}
+    {{ form.dxf|as_crispy_field }}
+    {{ form.temp_image|as_crispy_field }}
+    <div class="row">
+      <div class="col">
+        {{ form.lat|as_crispy_field }}
+      </div>
+      <div class="col">
+        {{ form.long|as_crispy_field }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        {{ form.designx|as_crispy_field }}
+      </div>
+      <div class="col">
+        {{ form.designy|as_crispy_field }}
+      </div>
+    </div>
+    {{ form.rotation|as_crispy_field }}
+    <button class="btn btn-primary"
+            hx-post="{% url 'djeocadengine:drawing_update' pk=object.id %}"
+            hx-target="#nav-card">
+      {% trans 'Update' %}
+    </button>
+    <button class="btn-close"
+            title="{% trans 'Dismiss' %}"
+            hx-get="{% url 'djeocadengine:drawing_detail' pk=object.id %}"
+            hx-target="#nav-card">
+    </button>
+  </form>
+</div>
+<div>
+  <h4>{% trans "Layers" %}</h4>
+  {% for layer in layers %}
+    <div id="layer-{{ layer.id }}">
+      {% include "djeocadengine/htmx/layer_inline.html" %}
+    </div>
+  {% endfor %}
+</div>
+<div>
+  <h4>{% trans "Blocks" %}</h4>
+  {% for layer in blocks %}
+    {% include "djeocadengine/htmx/layer_inline.html" %}
+  {% endfor %}
+</div>
+</div>

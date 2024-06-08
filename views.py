@@ -164,11 +164,11 @@ class DrawingDetailView(HxTemplateMixin, DetailView):
         return response
 
 
-class DrawingUpdateView(PermissionRequiredMixin, UpdateView):
+class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
     permission_required = "djeocadengine.change_drawing"
     model = Drawing
     form_class = DrawingUpdateForm
-    template_name = "djeocadengine/includes/drawing_update.html"
+    template_name = "djeocadengine/htmx/drawing_update.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
