@@ -1,8 +1,6 @@
 django>=5.0,<6.0
 django-htmx
-django-geojson
-jsonfield
-django-leaflet
+django-geojson @ git+https://github.com/andywar65/django-geojson@oserror
 ezdxf
 django-colorfield
 pyproj
