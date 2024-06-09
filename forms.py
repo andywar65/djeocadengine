@@ -1,5 +1,4 @@
 from django.forms import CharField, FileInput, ModelForm, TextInput
-
 from djeocadengine.models import Drawing, Layer
 
 
