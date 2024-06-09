@@ -1,4 +1,4 @@
-from django.forms import FileInput, ModelForm
+from django.forms import CharField, FileInput, ModelForm, TextInput
 
 from djeocadengine.models import Drawing, Layer
 
@@ -48,6 +48,14 @@ class DrawingUpdateForm(ModelForm):
 
 
 class LayerUpdateForm(ModelForm):
+    color_field = CharField(
+        label="Color",
+        required=True,
+        widget=TextInput(
+            attrs={"class": "form-control form-control-color", "type": "color"}
+        ),
+    )
+
     class Meta:
         model = Layer
         fields = ["color_field", "linetype"]
