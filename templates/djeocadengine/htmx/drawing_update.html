@@ -48,20 +48,32 @@
   </form>
 </div>
 <div class="card-footer">
-  <div>
-    <h4>{% trans "Layers" %}</h4>
-    {% for layer in layers %}
-      <div id="layer-{{ layer.id }}">
+  <a id="layer-show"
+     class="link link-primary"
+     script="on click hide me then show #layer-list">
+    {% trans "See layers" %}
+  </a>
+  <div id="layer-list" style="display: none">
+    <a id="layer-show"
+       class="link link-primary"
+       script="on click hide #layer-list then show #layer-show">
+      {% trans "Hide layers" %}
+    </a>
+    <div>
+      <h4>{% trans "Layers" %}</h4>
+      {% for layer in layers %}
+        <div id="layer-{{ layer.id }}">
+          {% include "djeocadengine/htmx/layer_inline.html" %}
+        </div>
+      {% endfor %}
+    </div>
+    <hr>
+    <div>
+      <h4>{% trans "Blocks" %}</h4>
+      {% for layer in blocks %}
         {% include "djeocadengine/htmx/layer_inline.html" %}
-      </div>
-    {% endfor %}
-  </div>
-  <hr>
-  <div>
-    <h4>{% trans "Blocks" %}</h4>
-    {% for layer in blocks %}
-      {% include "djeocadengine/htmx/layer_inline.html" %}
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% include "djeocadengine/includes/map_data.html" %}
