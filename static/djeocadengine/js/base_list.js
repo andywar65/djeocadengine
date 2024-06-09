@@ -32,6 +32,7 @@ function getCollections() {
     layer_control.removeLayer(layer);
     map.removeLayer(layer);
   });
+  marker_layer.clearLayers();
   // add base layers back to map and layer control
   base_map.addTo(map);
   // add layer groups
