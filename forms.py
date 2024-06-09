@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import FileInput, ModelForm
 
 from djeocadengine.models import Drawing, Layer
 
@@ -25,6 +25,7 @@ class DrawingManualForm(ModelForm):
         fields = ["lat", "long", "designx", "designy", "rotation"]
 
     class Media:
+        # not used
         js = ("djeocadengine/js/locate_user.js",)
 
 
@@ -41,6 +42,9 @@ class DrawingUpdateForm(ModelForm):
             "designy",
             "rotation",
         ]
+        widgets = {
+            "dxf": FileInput(),
+        }
 
 
 class LayerUpdateForm(ModelForm):
