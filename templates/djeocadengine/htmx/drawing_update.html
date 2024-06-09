@@ -37,7 +37,8 @@
     {{ form.rotation|as_crispy_field }}
     <button class="btn btn-primary"
             hx-post="{% url 'djeocadengine:drawing_update' pk=object.id %}"
-            hx-target="#nav-card">
+            hx-target="#nav-card"
+            hx-encoding="multipart/form-data">
       {% trans 'Update' %}
     </button>
     <button class="btn-close"
