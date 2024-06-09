@@ -21,6 +21,7 @@ const base_map = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
   });
 
 const layer_control = L.control.layers(null).addTo(map);
+const marker_layer = L.layerGroup().addTo(map);
 
 function getCollections() {
   // add eventually inactive base layers so they can be removed
@@ -41,11 +42,12 @@ function getCollections() {
       layer_control.addOverlay(window[layer_name], layer_name);
     }
   }
+  marker_layer.addTo(map)
   // add objects to layers
   collection = JSON.parse(document.getElementById("marker_data").textContent);
   for (marker of collection.features) {
     // let author = marker.properties.popupContent.layer
-    L.geoJson(marker, {onEachFeature: onEachFeature}).addTo(map);
+    L.geoJson(marker, {onEachFeature: onEachFeature}).addTo(marker_layer);
   }
   // fit bounds
   if (collection.features.length !== 0) {
@@ -78,6 +80,8 @@ function onMapClick(e) {
   var inputlong = document.getElementById("id_long");
   inputlat.setAttribute('value', e.latlng.lat);
   inputlong.setAttribute('value', e.latlng.lng);
+  marker_layer.clearLayers();
+  L.marker([e.latlng.lat, e.latlng.lng]).addTo(marker_layer)
 }
 
 map.on('click', onMapClick);
