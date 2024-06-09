@@ -2,7 +2,7 @@
 {% load thumbnail %}
 
 <div class="card-header">
-  <h4 class="card-title">{% trans "Drawing"%}: {{ object.title }}</h4>
+  <h5 class="card-title">{% trans "Drawing"%}: {{ object.title }}</h5>
 </div>
 {% if object.image %}
   <img src="{% thumbnail object.image 480x240 crop %}" class="card-img-top">
@@ -18,12 +18,15 @@
         {% trans "Back to list" %}
       </a>
     </li>
-    <li>
-      <a class="link link-primary"
-         href="{% url 'djeocadengine:drawing_update' pk=object.id %}">
-        {% trans "Modify drawing" %}
-      </a>
-    </li>
+    {% if user.is_authenticated %}
+      <li>
+        <a class="link link-primary"
+           hx-get="{% url 'djeocadengine:drawing_update' pk=object.id %}"
+           hx-target="#nav-card">
+          {% trans "Modify drawing" %}
+        </a>
+      </li>
+    {% endif %}
     <li>
       <a class="link link-success"
          href="{% url 'djeocadengine:drawing_csv' pk=object.id %}">

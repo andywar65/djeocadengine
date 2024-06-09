@@ -2,6 +2,7 @@ import csv
 import json
 from typing import Any
 
+from django.conf import settings
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models.query import QuerySet
@@ -53,6 +54,7 @@ class BaseListView(HxTemplateMixin, ListView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["unreferenced"] = Drawing.objects.filter(epsg=None)
+        context["leaflet_config"] = settings.LEAFLET_CONFIG
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -63,11 +65,11 @@ class BaseListView(HxTemplateMixin, ListView):
         return response
 
 
-class DrawingCreateView(PermissionRequiredMixin, HxTemplateMixin, CreateView):
+class DrawingCreateView(PermissionRequiredMixin, HxSetupMixin, CreateView):
     model = Drawing
     permission_required = "djeocadengine.add_drawing"
     form_class = DrawingCreateForm
-    template_name = "djeocadengine/drawing_create.html"
+    template_name = "djeocadengine/htmx/drawing_create.html"
 
     def form_valid(self, form):
         if form.cleaned_data["temp_image"]:
@@ -92,10 +94,10 @@ class DrawingCreateView(PermissionRequiredMixin, HxTemplateMixin, CreateView):
         )
 
 
-class DrawingGeodataView(PermissionRequiredMixin, HxTemplateMixin, UpdateView):
+class DrawingGeodataView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
-    template_name = "djeocadengine/drawing_geodata.html"
+    template_name = "djeocadengine/htmx/drawing_geodata.html"
     form_class = DrawingParentForm
 
     def get_success_url(self):
@@ -105,17 +107,35 @@ class DrawingGeodataView(PermissionRequiredMixin, HxTemplateMixin, UpdateView):
         )
 
 
-class DrawingManualView(PermissionRequiredMixin, UpdateView):
+class DrawingManualView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
     model = Drawing
     permission_required = "djeocadengine.change_drawing"
-    template_name = "djeocadengine/includes/drawing_manual.html"
+    template_name = "djeocadengine/htmx/drawing_manual.html"
     form_class = DrawingManualForm
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["drawings"] = Drawing.objects.none()
+        context["leaflet_config"] = settings.LEAFLET_CONFIG
+        return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["lat"] = settings.LEAFLET_CONFIG["DEFAULT_CENTER"][0]
+        initial["long"] = settings.LEAFLET_CONFIG["DEFAULT_CENTER"][1]
+        return initial
 
     def get_success_url(self):
         return reverse(
             "djeocadengine:drawing_detail",
             kwargs={"pk": self.object.id},
         )
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        dict = {"refreshCollections": True}
+        response["HX-Trigger-After-Swap"] = json.dumps(dict)
+        return response
 
 
 class DrawingDetailView(HxTemplateMixin, DetailView):
@@ -144,14 +164,15 @@ class DrawingDetailView(HxTemplateMixin, DetailView):
         return response
 
 
-class DrawingUpdateView(PermissionRequiredMixin, UpdateView):
+class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
     permission_required = "djeocadengine.change_drawing"
     model = Drawing
     form_class = DrawingUpdateForm
-    template_name = "djeocadengine/includes/drawing_update.html"
+    template_name = "djeocadengine/htmx/drawing_update.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
+        context["drawings"] = self.object
         context["layers"] = self.object.related_layers.filter(is_block=False)
         context["blocks"] = self.object.related_layers.filter(is_block=True)
         return context
@@ -172,6 +193,12 @@ class DrawingUpdateView(PermissionRequiredMixin, UpdateView):
             "djeocadengine:drawing_detail",
             kwargs={"pk": self.object.id},
         )
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        dict = {"refreshCollections": True}
+        response["HX-Trigger-After-Swap"] = json.dumps(dict)
+        return response
 
 
 @permission_required("djeocadengine.delete_drawing")

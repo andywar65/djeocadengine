@@ -1,6 +1,5 @@
-from django.forms import ModelForm
+from django.forms import CharField, FileInput, ModelForm, TextInput
 from djeocadengine.models import Drawing, Layer
-from leaflet.forms.widgets import LeafletWidget
 
 
 class DrawingCreateForm(ModelForm):
@@ -22,17 +21,21 @@ class DrawingParentForm(ModelForm):
 class DrawingManualForm(ModelForm):
     class Meta:
         model = Drawing
-        fields = ["geom", "designx", "designy", "rotation"]
-        widgets = {
-            "geom": LeafletWidget(
-                attrs={
-                    "geom_type": "Point",
-                }
-            )
-        }
+        fields = ["lat", "long", "designx", "designy", "rotation"]
 
     class Media:
+        # not used
         js = ("djeocadengine/js/locate_user.js",)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        lat = cleaned_data["lat"]
+        long = cleaned_data["long"]
+        if lat > 90 or lat < -90:
+            self.add_error("lat", "Invalid value")
+        if long > 180 or long < -180:
+            self.add_error("long", "Invalid value")
+        return cleaned_data
 
 
 class DrawingUpdateForm(ModelForm):
@@ -42,21 +45,36 @@ class DrawingUpdateForm(ModelForm):
             "title",
             "dxf",
             "temp_image",
-            "geom",
+            "lat",
+            "long",
             "designx",
             "designy",
             "rotation",
         ]
         widgets = {
-            "geom": LeafletWidget(
-                attrs={
-                    "geom_type": "Point",
-                }
-            )
+            "dxf": FileInput(),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        lat = cleaned_data["lat"]
+        long = cleaned_data["long"]
+        if lat > 90 or lat < -90:
+            self.add_error("lat", "Invalid value")
+        if long > 180 or long < -180:
+            self.add_error("long", "Invalid value")
+        return cleaned_data
 
 
 class LayerUpdateForm(ModelForm):
+    color_field = CharField(
+        label="Color",
+        required=True,
+        widget=TextInput(
+            attrs={"class": "form-control form-control-color", "type": "color"}
+        ),
+    )
+
     class Meta:
         model = Layer
         fields = ["color_field", "linetype"]

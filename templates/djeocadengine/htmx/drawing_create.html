@@ -2,19 +2,20 @@
 {% load i18n %}
 
 
-<div class="card mx-auto" style="max-width: 480px;">
-  <div class="card-header">
-    <h4 class="card-title">
-      {% trans "Add drawing"%}
-    </h4>
-  </div>
-  <div class="card-body">
-    <form method="POST" action="" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form|crispy }}
-      <input class="btn btn-primary"
-             type="submit"
-             value="{% trans 'Add' %}" />
-    </form>
-  </div>
+<div class="card-header">
+  <h5 class="card-title">
+    {% trans "Add drawing"%}
+  </h5>
+</div>
+<div class="card-body">
+  <form>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-primary"
+            hx-post="{% url 'djeocadengine:drawing_create' %}"
+            hx-target="#nav-card"
+            hx-encoding="multipart/form-data">
+      {% trans 'Add' %}
+    </button>
+  </form>
 </div>
