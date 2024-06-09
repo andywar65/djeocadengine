@@ -28,6 +28,16 @@ class DrawingManualForm(ModelForm):
         # not used
         js = ("djeocadengine/js/locate_user.js",)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        lat = cleaned_data["lat"]
+        long = cleaned_data["long"]
+        if lat > 90 or lat < -90:
+            self.add_error("lat", "Invalid value")
+        if long > 180 or long < -180:
+            self.add_error("long", "Invalid value")
+        return cleaned_data
+
 
 class DrawingUpdateForm(ModelForm):
     class Meta:
@@ -45,6 +55,16 @@ class DrawingUpdateForm(ModelForm):
         widgets = {
             "dxf": FileInput(),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        lat = cleaned_data["lat"]
+        long = cleaned_data["long"]
+        if lat > 90 or lat < -90:
+            self.add_error("lat", "Invalid value")
+        if long > 180 or long < -180:
+            self.add_error("long", "Invalid value")
+        return cleaned_data
 
 
 class LayerUpdateForm(ModelForm):

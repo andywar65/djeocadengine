@@ -115,7 +115,7 @@ class DrawingManualView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["markers"] = Drawing.objects.none()
+        context["drawings"] = Drawing.objects.none()
         context["leaflet_config"] = settings.LEAFLET_CONFIG
         return context
 
