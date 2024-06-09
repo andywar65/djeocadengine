@@ -2,7 +2,7 @@
 {% load thumbnail %}
 
 <div class="card-header">
-  <h4 class="card-title">{% trans "Drawing"%}: {{ object.title }}</h4>
+  <h5 class="card-title">{% trans "Drawing"%}: {{ object.title }}</h5>
 </div>
 {% if object.image %}
   <img src="{% thumbnail object.image 480x240 crop %}" class="card-img-top">

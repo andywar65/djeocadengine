@@ -3,9 +3,9 @@
 {% load thumbnail %}
 
 <div class="card-header">
-  <h4 class="card-title">
+  <h5 class="card-title">
     {% trans "Update drawing"%}: {{ object }}
-  </h4>
+  </h5>
 </div>
 <div class="card-body">
   {% if object.image %}
@@ -60,7 +60,7 @@
       {% trans "Hide layers" %}
     </a>
     <div>
-      <h4>{% trans "Layers" %}</h4>
+      <h5>{% trans "Layers" %}</h5>
       {% for layer in layers %}
         <div id="layer-{{ layer.id }}">
           {% include "djeocadengine/htmx/layer_inline.html" %}
@@ -69,7 +69,7 @@
     </div>
     <hr>
     <div>
-      <h4>{% trans "Blocks" %}</h4>
+      <h5>{% trans "Blocks" %}</h5>
       {% for layer in blocks %}
         {% include "djeocadengine/htmx/layer_inline.html" %}
       {% endfor %}

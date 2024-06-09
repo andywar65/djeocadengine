@@ -2,19 +2,18 @@
 {% load i18n %}
 
 <div class="card-header">
-  <h4 class="card-title">
-    {% trans "Add GeoData"%}: {{ object }}
-  </h4>
+  <h5 class="card-title">
+    {% trans "Add GeoData manually to"%}: {{ object }}
+  </h5>
 </div>
 <div class="card-body">
   <div class="alert alert-warning alert-dismissible fade show" role="alert">
     {% blocktrans %}
-      No Geodata found in DXF, you must insert it manually.
-      On the map click a point corresponding to a geolocated DXF point
-      or enter Latitude and Longitude manually.
-      In X and Y enter the coordinates of this point in DXF units (it defaults to WCS origin).
+      To insert manually the GeoData, you must know the geolocation of a point on your DXF.
+      Click it on the map, or enter it's geographical coordinates.
+      If this point is not the WCS origin of the drawing, you must enter it's DXF coordinates.
       Rotation is the angle you need to rotate the drawing to orient it
-      correctly to True North (angle in degrees, counterclockwise is positive).
+      correctly to True North (angle in degrees, counter clockwise is positive).
     {% endblocktrans %}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
