@@ -7,3 +7,7 @@ pyproj
 shapely
 nh3
 django-template-partials
+easy-thumbnails
+django-filer
+django-crispy-forms
+crispy-bootstrap5
