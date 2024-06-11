@@ -57,3 +57,21 @@ class GeoCADViewsTest(TestCase):
             reverse("djeocadengine:drawing_detail", kwargs={"pk": draw.id})
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_unlogged_create_status_code(self):
+        response = self.client.get(reverse("djeocadengine:drawing_create"))
+        self.assertEqual(response.status_code, 404)
+
+    def test_unlogged_update_status_code(self):
+        draw = Drawing.objects.first()
+        response = self.client.get(
+            reverse("djeocadengine:drawing_update", kwargs={"pk": draw.id})
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_unlogged_delete_status_code(self):
+        draw = Drawing.objects.first()
+        response = self.client.get(
+            reverse("djeocadengine:drawing_delete", kwargs={"pk": draw.id})
+        )
+        self.assertEqual(response.status_code, 404)
