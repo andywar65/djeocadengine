@@ -74,4 +74,18 @@ class GeoCADViewsTest(TestCase):
         response = self.client.get(
             reverse("djeocadengine:drawing_delete", kwargs={"pk": draw.id})
         )
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
+
+    def test_unlogged_htmx_create_status_code(self):
+        response = self.client.get(
+            reverse("djeocadengine:drawing_create"), headers={"Hx-Request": "true"}
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_unlogged_htmx_update_status_code(self):
+        draw = Drawing.objects.first()
+        response = self.client.get(
+            reverse("djeocadengine:drawing_update", kwargs={"pk": draw.id}),
+            headers={"Hx-Request": "true"},
+        )
+        self.assertEqual(response.status_code, 302)
