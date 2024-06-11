@@ -58,6 +58,21 @@ class GeoCADViewsTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_unlogged_htmx_list_status_code(self):
+        response = self.client.get(
+            reverse("djeocadengine:base_list"),
+            headers={"Hx-Request": "true"},
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_unlogged_htmx_detail_status_code(self):
+        draw = Drawing.objects.first()
+        response = self.client.get(
+            reverse("djeocadengine:drawing_detail", kwargs={"pk": draw.id}),
+            headers={"Hx-Request": "true"},
+        )
+        self.assertEqual(response.status_code, 200)
+
     def test_unlogged_create_status_code(self):
         response = self.client.get(reverse("djeocadengine:drawing_create"))
         self.assertEqual(response.status_code, 404)
@@ -89,3 +104,36 @@ class GeoCADViewsTest(TestCase):
             headers={"Hx-Request": "true"},
         )
         self.assertEqual(response.status_code, 302)
+
+    def test_logged_delete_status_code(self):
+        self.client.login(username="boss", password=pword)
+        draw = Drawing.objects.first()
+        response = self.client.get(
+            reverse("djeocadengine:drawing_delete", kwargs={"pk": draw.id})
+        )
+        self.assertEqual(response.status_code, 301)  # ?
+
+    def test_logged_htmx_create_status_code(self):
+        self.client.login(username="boss", password=pword)
+        response = self.client.get(
+            reverse("djeocadengine:drawing_create"), headers={"Hx-Request": "true"}
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_logged_htmx_update_status_code(self):
+        self.client.login(username="boss", password=pword)
+        draw = Drawing.objects.first()
+        response = self.client.get(
+            reverse("djeocadengine:drawing_update", kwargs={"pk": draw.id}),
+            headers={"Hx-Request": "true"},
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_logged_htmx_delete_status_code(self):
+        self.client.login(username="boss", password=pword)
+        draw = Drawing.objects.first()
+        response = self.client.get(
+            reverse("djeocadengine:drawing_delete", kwargs={"pk": draw.id}),
+            headers={"Hx-Request": "true"},
+        )
+        self.assertEqual(response.status_code, 200)
