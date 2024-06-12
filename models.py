@@ -80,8 +80,7 @@ class Drawing(models.Model):
         verbose_name_plural = _("Drawings")
 
     __original_dxf = None
-    __original_lat = None
-    __original_long = None
+    __original_geom = None
     __original_designx = None
     __original_designy = None
     __original_rotation = None
@@ -109,8 +108,7 @@ class Drawing(models.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__original_dxf = self.dxf
-        self.__original_lat = self.lat
-        self.__original_long = self.long
+        self.__original_geom = self.geom
         self.__original_designx = self.designx
         self.__original_designy = self.designy
         self.__original_rotation = self.rotation
@@ -159,8 +157,7 @@ class Drawing(models.Model):
                 extract_dxf(self, doc=None, refresh=True)
                 return
             # check if user has inserted origin on map
-            elif self.lat or self.long:
-                self.geom = {"type": "Point", "coordinates": [self.long, self.lat]}
+            elif self.geom:
                 # following conditional for test to work
                 if isinstance(self.geom, str):
                     self.geom = json.loads(self.geom)
@@ -214,16 +211,11 @@ class Drawing(models.Model):
         # check if something changed
         if (
             self.__original_dxf != self.dxf
-            or self.__original_lat != self.lat
-            or self.__original_long != self.long
+            or self.__original_geom != self.geom
             or self.__original_designx != self.designx
             or self.__original_designy != self.designy
             or self.__original_rotation != self.rotation
         ):
-            # if lat or long have changed we have to update geom
-            if self.__original_lat != self.lat or self.__original_long != self.long:
-                self.geom = {"type": "Point", "coordinates": [self.long, self.lat]}
-                super().save(*args, **kwargs)
             all_layers = self.related_layers.all()
             if all_layers.exists():
                 all_layers.delete()
