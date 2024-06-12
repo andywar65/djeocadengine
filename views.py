@@ -130,6 +130,8 @@ class DrawingManualView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
             "type": "Point",
             "coordinates": [form.cleaned_data["long"], form.cleaned_data["lat"]],
         }
+        form.instance.lat = None
+        form.instance.long = None
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -177,6 +179,12 @@ class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
     form_class = DrawingUpdateForm
     template_name = "djeocadengine/htmx/drawing_update.html"
 
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["lat"] = self.object.geom["coordinates"][1]
+        initial["long"] = self.object.geom["coordinates"][0]
+        return initial
+
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["drawings"] = self.object
@@ -197,7 +205,9 @@ class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
             "type": "Point",
             "coordinates": [form.cleaned_data["long"], form.cleaned_data["lat"]],
         }
-        return super(DrawingUpdateView, self).form_valid(form)
+        form.instance.lat = None
+        form.instance.long = None
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse(

@@ -145,8 +145,6 @@ class Drawing(models.Model):
         if not self.epsg:
             # check if user has inserted parent
             if self.parent:
-                self.lat = self.parent.lat
-                self.long = self.parent.long
                 self.geom = self.parent.geom
                 self.epsg = self.parent.epsg
                 self.designx = self.parent.designx
@@ -194,8 +192,6 @@ class Drawing(models.Model):
                         geodata.dxf.reference_point[0], geodata.dxf.reference_point[1]
                     )
                     self.geom = {"type": "Point", "coordinates": world_point}
-                    self.lat = self.geom["coordinates"][1]
-                    self.long = self.geom["coordinates"][0]
                     self.designx = geodata.dxf.design_point[0]
                     self.designy = geodata.dxf.design_point[1]
                     self.rotation = degrees(
