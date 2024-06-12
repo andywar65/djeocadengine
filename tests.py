@@ -11,7 +11,7 @@ from .models import Drawing
 pword = settings.DJANGO_SUPERUSER_PASSWORD
 
 
-@override_settings(MEDIA_ROOT=Path(settings.MEDIA_ROOT).joinpath("temp"))
+@override_settings(MEDIA_ROOT=Path(settings.MEDIA_ROOT).joinpath("tests"))
 class GeoCADViewsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
