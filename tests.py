@@ -21,20 +21,18 @@ class GeoCADViewsTest(TestCase):
         )
         with open(img_path, "rb") as f:
             content = f.read()
-        draw1 = Drawing(
+        Drawing.objects.create(
             title="Drawing 1",
             dxf=SimpleUploadedFile("nogeo.dxf", content, "image/x-dxf"),
-            lat=42.0,
-            long=12.0,
+            geom={"type": "Point", "coordinates": [12.0, 42.0]},
+            epsg=32633,
         )
-        draw1.save()
-        draw2 = Drawing(
+        Drawing.objects.create(
             title="Drawing 2",
             dxf=SimpleUploadedFile("nogeo.dxf", content, "image/x-dxf"),
-            lat=42.1,
-            long=12.1,
+            geom={"type": "Point", "coordinates": [12.1, 42.1]},
+            epsg=32633,
         )
-        draw2.save()
         f.close()
 
     def tearDown(self):
