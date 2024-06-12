@@ -55,8 +55,8 @@ class Drawing(models.Model):
         ],
     )
     geom = PointField(_("Location"), null=True)
-    lat = models.FloatField(_("Latitude"), default=0)
-    long = models.FloatField(_("Longitude"), default=0)
+    lat = models.FloatField(_("Latitude"), null=True)
+    long = models.FloatField(_("Longitude"), null=True)
     designx = models.FloatField(
         _("Design point X..."),
         default=0,
