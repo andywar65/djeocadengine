@@ -125,6 +125,13 @@ class DrawingManualView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
         initial["long"] = settings.LEAFLET_CONFIG["DEFAULT_CENTER"][1]
         return initial
 
+    def form_valid(self, form):
+        form.instance.geom = {
+            "type": "Point",
+            "coordinates": [form.cleaned_data["long"], form.cleaned_data["lat"]],
+        }
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse(
             "djeocadengine:drawing_detail",
@@ -186,6 +193,10 @@ class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
             )
             form.instance.image = img
             form.instance.temp_image = None
+        form.instance.geom = {
+            "type": "Point",
+            "coordinates": [form.cleaned_data["long"], form.cleaned_data["lat"]],
+        }
         return super(DrawingUpdateView, self).form_valid(form)
 
     def get_success_url(self):
