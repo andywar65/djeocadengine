@@ -136,26 +136,20 @@ class GeoCADViewsTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_unlogged_download_csv_status_code(self):
-        draw = Drawing.objects.first()
-        response = self.client.get(
-            reverse("djeocadengine:drawing_csv", kwargs={"pk": draw.id})
-        )
-        self.assertEqual(response.status_code, 200)
-
     def test_create_drawing_from_georeferenced(self):
-        img_path = Path(settings.BASE_DIR).joinpath(
+        dxf_path = Path(settings.BASE_DIR).joinpath(
             "djeocadengine/static/djeocadengine/tests/yesgeo.dxf"
         )
-        with open(img_path, "rb") as f:
-            content = f.read()
+        with open(dxf_path, "rb") as f:
+            dxf_content = f.read()
         self.client.login(username="boss", password=pword)
+        # add this call to make next one work. why?
+        self.client.get(reverse("djeocadengine:drawing_create"))
         response = self.client.post(
             reverse("djeocadengine:drawing_create"),
             {
                 "title": "Georeferenced",
-                "dxf": SimpleUploadedFile("yesgeo.dxf", content, "image/x-dxf"),
-                "temp_image": "",
+                "dxf": SimpleUploadedFile("yesgeo.dxf", dxf_content, "text/dxf"),
             },
             headers={"HX-Request": "true"},
             follow=True,
@@ -169,5 +163,9 @@ class GeoCADViewsTest(TestCase):
         )
         response = self.client.get(
             reverse("djeocadengine:drawing_download", kwargs={"pk": draw.id})
+        )
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(
+            reverse("djeocadengine:drawing_csv", kwargs={"pk": draw.id})
         )
         self.assertEqual(response.status_code, 200)
