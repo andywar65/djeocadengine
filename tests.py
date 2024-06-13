@@ -109,7 +109,7 @@ class GeoCADViewsTest(TestCase):
         response = self.client.get(
             reverse("djeocadengine:drawing_delete", kwargs={"pk": draw.id})
         )
-        self.assertEqual(response.status_code, 301)  # ?
+        self.assertEqual(response.status_code, 404)
 
     def test_logged_htmx_create_status_code(self):
         self.client.login(username="boss", password=pword)
@@ -136,17 +136,38 @@ class GeoCADViewsTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_unlogged_download_dxf_status_code(self):
-        # this can work when we have an uploaded file
-        draw = Drawing.objects.first()
-        response = self.client.get(  # noqa
-            reverse("djeocadengine:drawing_download", kwargs={"pk": draw.id})
-        )
-        # self.assertEqual(response.status_code, 200)
-
     def test_unlogged_download_csv_status_code(self):
         draw = Drawing.objects.first()
         response = self.client.get(
             reverse("djeocadengine:drawing_csv", kwargs={"pk": draw.id})
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_drawing_from_georeferenced(self):
+        img_path = Path(settings.BASE_DIR).joinpath(
+            "djeocadengine/static/djeocadengine/tests/yesgeo.dxf"
+        )
+        with open(img_path, "rb") as f:
+            content = f.read()
+        self.client.login(username="boss", password=pword)
+        response = self.client.post(
+            reverse("djeocadengine:drawing_create"),
+            {
+                "title": "Georeferenced",
+                "dxf": SimpleUploadedFile("yesgeo.dxf", content, "image/x-dxf"),
+                "temp_image": "",
+            },
+            headers={"HX-Request": "true"},
+            follow=True,
+        )
+        draw = Drawing.objects.get(title="Georeferenced")
+        self.assertRedirects(
+            response,
+            reverse("djeocadengine:drawing_detail", kwargs={"pk": draw.id}),
+            status_code=302,
+            target_status_code=200,
+        )
+        response = self.client.get(
+            reverse("djeocadengine:drawing_download", kwargs={"pk": draw.id})
         )
         self.assertEqual(response.status_code, 200)
