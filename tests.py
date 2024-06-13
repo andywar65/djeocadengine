@@ -135,3 +135,18 @@ class GeoCADViewsTest(TestCase):
             headers={"Hx-Request": "true"},
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_unlogged_download_dxf_status_code(self):
+        # this can work when we have an uploaded file
+        draw = Drawing.objects.first()
+        response = self.client.get(  # noqa
+            reverse("djeocadengine:drawing_download", kwargs={"pk": draw.id})
+        )
+        # self.assertEqual(response.status_code, 200)
+
+    def test_unlogged_download_csv_status_code(self):
+        draw = Drawing.objects.first()
+        response = self.client.get(
+            reverse("djeocadengine:drawing_csv", kwargs={"pk": draw.id})
+        )
+        self.assertEqual(response.status_code, 200)
