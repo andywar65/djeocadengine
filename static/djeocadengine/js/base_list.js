@@ -77,12 +77,15 @@ function openDrawing(path) {
 }
 
 function onMapClick(e) {
-  var inputlat = document.getElementById("id_lat");
-  var inputlong = document.getElementById("id_long");
-  inputlat.setAttribute('value', e.latlng.lat);
-  inputlong.setAttribute('value', e.latlng.lng);
-  marker_layer.clearLayers();
-  L.marker([e.latlng.lat, e.latlng.lng]).addTo(marker_layer)
+  var map_status = JSON.parse(document.getElementById("map_status").textContent);
+  if (map_status.map_on_click) {
+    var inputlat = document.getElementById("id_lat");
+    var inputlong = document.getElementById("id_long");
+    inputlat.setAttribute('value', e.latlng.lat);
+    inputlong.setAttribute('value', e.latlng.lng);
+    marker_layer.clearLayers();
+    L.marker([e.latlng.lat, e.latlng.lng]).addTo(marker_layer)
+  }
 }
 
 map.on('click', onMapClick);
