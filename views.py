@@ -117,6 +117,7 @@ class DrawingManualView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context["drawings"] = Drawing.objects.none()
         context["leaflet_config"] = settings.LEAFLET_CONFIG
+        context["map_status"] = {"onclick": True}
         return context
 
     def get_initial(self):
@@ -190,6 +191,7 @@ class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
         context["drawings"] = self.object
         context["layers"] = self.object.related_layers.filter(is_block=False)
         context["blocks"] = self.object.related_layers.filter(is_block=True)
+        context["map_status"] = {"onclick": True}
         return context
 
     def form_valid(self, form):
