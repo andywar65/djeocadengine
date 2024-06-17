@@ -169,3 +169,38 @@ class GeoCADViewsTest(TestCase):
             reverse("djeocadengine:drawing_csv", kwargs={"pk": draw.id})
         )
         self.assertEqual(response.status_code, 200)
+        dxf_path = Path(settings.BASE_DIR).joinpath(
+            "djeocadengine/static/djeocadengine/tests/nogeo.dxf"
+        )
+        with open(dxf_path, "rb") as f:
+            dxf_content = f.read()
+        response = self.client.post(
+            reverse("djeocadengine:drawing_create"),
+            {
+                "title": "Not Georeferenced",
+                "dxf": SimpleUploadedFile("nogeo.dxf", dxf_content, "text/dxf"),
+            },
+            headers={"HX-Request": "true"},
+            follow=True,
+        )
+        draw2 = Drawing.objects.get(title="Not Georeferenced")
+        self.assertRedirects(
+            response,
+            reverse("djeocadengine:drawing_geodata", kwargs={"pk": draw2.id}),
+            status_code=302,
+            target_status_code=200,
+        )
+        response = self.client.post(
+            reverse("djeocadengine:drawing_geodata", kwargs={"pk": draw2.id}),
+            {
+                "parent": draw.id,
+            },
+            headers={"HX-Request": "true"},
+            follow=True,
+        )
+        self.assertRedirects(
+            response,
+            reverse("djeocadengine:drawing_detail", kwargs={"pk": draw2.id}),
+            status_code=302,
+            target_status_code=200,
+        )
