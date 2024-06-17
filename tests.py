@@ -6,7 +6,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from users.models import User
 
-from .models import Drawing
+from .models import Drawing, Layer
 
 pword = settings.DJANGO_SUPERUSER_PASSWORD
 
@@ -266,3 +266,25 @@ class GeoCADViewsTest(TestCase):
             status_code=302,
             target_status_code=200,
         )
+        lay = Layer.objects.get(drawing=draw.id, name="one")
+        response = self.client.post(
+            reverse("djeocadengine:layer_update", kwargs={"pk": lay.id}),
+            {
+                "name": "one",
+                "color_field": "#f0f0f0",
+                "linetype": True,
+            },
+            headers={"HX-Request": "true"},
+            follow=True,
+        )
+        self.assertRedirects(
+            response,
+            reverse("djeocadengine:layer_detail", kwargs={"pk": lay.id}),
+            status_code=302,
+            target_status_code=200,
+        )
+        response = self.client.get(
+            reverse("djeocadengine:layer_delete", kwargs={"pk": lay.id}),
+            headers={"HX-Request": "true"},
+        )
+        self.assertEqual(response.status_code, 200)
