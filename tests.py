@@ -246,3 +246,23 @@ class GeoCADViewsTest(TestCase):
             status_code=302,
             target_status_code=200,
         )
+        response = self.client.post(
+            reverse("djeocadengine:drawing_update", kwargs={"pk": draw.id}),
+            {
+                "lat": 42,
+                "long": 11,
+                "designx": 0,
+                "designy": 0,
+                "rotation": 0,
+                "title": "Again not Georeferenced",
+                "dxf": "uploads/djeocad/dxf/nogeo.dxf",
+            },
+            headers={"HX-Request": "true"},
+            follow=True,
+        )
+        self.assertRedirects(
+            response,
+            reverse("djeocadengine:drawing_detail", kwargs={"pk": draw.id}),
+            status_code=302,
+            target_status_code=200,
+        )
