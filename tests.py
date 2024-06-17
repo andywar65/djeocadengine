@@ -6,6 +6,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from users.models import User
 
+from .forms import DrawingManualForm, DrawingUpdateForm
 from .models import Drawing, Layer
 
 pword = settings.DJANGO_SUPERUSER_PASSWORD
@@ -288,3 +289,27 @@ class GeoCADViewsTest(TestCase):
             headers={"HX-Request": "true"},
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_validation_error(self):
+        form = DrawingManualForm(
+            data={
+                "lat": 142,
+                "long": 212,
+                "designx": 0,
+                "designy": 0,
+                "rotation": 0,
+            }
+        )
+        self.assertFalse(form.is_valid())
+        form = DrawingUpdateForm(
+            data={
+                "lat": 142,
+                "long": 211,
+                "designx": 0,
+                "designy": 0,
+                "rotation": 0,
+                "title": "Again not Georeferenced",
+                "dxf": "uploads/djeocad/dxf/nogeo.dxf",
+            }
+        )
+        self.assertFalse(form.is_valid())
