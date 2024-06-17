@@ -204,3 +204,45 @@ class GeoCADViewsTest(TestCase):
             status_code=302,
             target_status_code=200,
         )
+
+    def test_create_drawing_from_not_georeferenced(self):
+        dxf_path = Path(settings.BASE_DIR).joinpath(
+            "djeocadengine/static/djeocadengine/tests/nogeo.dxf"
+        )
+        with open(dxf_path, "rb") as f:
+            dxf_content = f.read()
+        self.client.login(username="boss", password=pword)
+        response = self.client.post(
+            reverse("djeocadengine:drawing_create"),
+            {
+                "title": "Again not Georeferenced",
+                "dxf": SimpleUploadedFile("nogeo.dxf", dxf_content, "text/dxf"),
+            },
+            headers={"HX-Request": "true"},
+            follow=True,
+        )
+        draw = Drawing.objects.get(title="Again not Georeferenced")
+        self.assertRedirects(
+            response,
+            reverse("djeocadengine:drawing_geodata", kwargs={"pk": draw.id}),
+            status_code=302,
+            target_status_code=200,
+        )
+        response = self.client.post(
+            reverse("djeocadengine:drawing_manual", kwargs={"pk": draw.id}),
+            {
+                "lat": 42,
+                "long": 12,
+                "designx": 0,
+                "designy": 0,
+                "rotation": 0,
+            },
+            headers={"HX-Request": "true"},
+            follow=True,
+        )
+        self.assertRedirects(
+            response,
+            reverse("djeocadengine:drawing_detail", kwargs={"pk": draw.id}),
+            status_code=302,
+            target_status_code=200,
+        )
