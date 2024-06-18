@@ -229,6 +229,11 @@ class GeoCADViewsTest(TestCase):
             status_code=302,
             target_status_code=200,
         )
+        response = self.client.get(
+            reverse("djeocadengine:drawing_manual", kwargs={"pk": draw.id}),
+            headers={"HX-Request": "true"},
+        )
+        self.assertEqual(response.status_code, 200)
         response = self.client.post(
             reverse("djeocadengine:drawing_manual", kwargs={"pk": draw.id}),
             {
