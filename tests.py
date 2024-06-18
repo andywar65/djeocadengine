@@ -269,6 +269,9 @@ class GeoCADViewsTest(TestCase):
                 "rotation": 0,
                 "title": "Again not Georeferenced",
                 "dxf": "uploads/djeocad/dxf/nogeo.dxf",
+                "temp_image": SimpleUploadedFile(
+                    "image2.jpg", img_content, "image/jpg"
+                ),
             },
             headers={"HX-Request": "true"},
             follow=True,
