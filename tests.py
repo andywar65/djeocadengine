@@ -37,7 +37,8 @@ class GeoCADViewsTest(TestCase):
         f.close()
 
     def tearDown(self):
-        """Checks existing files, then removes them"""
+        """Checks existing files, then removes them.
+        Not working for filer paths"""
         try:
             path = Path(settings.MEDIA_ROOT).joinpath("uploads/djeocad/dxf/")
             list = [e for e in path.iterdir() if e.is_file()]
@@ -210,14 +211,20 @@ class GeoCADViewsTest(TestCase):
         dxf_path = Path(settings.BASE_DIR).joinpath(
             "djeocadengine/static/djeocadengine/tests/nogeo.dxf"
         )
+        img_path = Path(settings.BASE_DIR).joinpath(
+            "djeocadengine/static/djeocadengine/tests/image.jpg"
+        )
         with open(dxf_path, "rb") as f:
             dxf_content = f.read()
+        with open(img_path, "rb") as i:
+            img_content = i.read()
         self.client.login(username="boss", password=pword)
         response = self.client.post(
             reverse("djeocadengine:drawing_create"),
             {
                 "title": "Again not Georeferenced",
                 "dxf": SimpleUploadedFile("nogeo.dxf", dxf_content, "text/dxf"),
+                "temp_image": SimpleUploadedFile("image.jpg", img_content, "image/jpg"),
             },
             headers={"HX-Request": "true"},
             follow=True,
