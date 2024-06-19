@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.forms import CharField, FileInput, ModelForm, TextInput
+
 from djeocadengine.models import Drawing, Layer
 
 
@@ -29,6 +31,10 @@ class DrawingManualForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        if "lat" not in cleaned_data:
+            raise ValidationError("Invalid Latitude entry", code="invalid_lat")
+        if "long" not in cleaned_data:
+            raise ValidationError("Invalid Longitude entry", code="invalid_long")
         lat = cleaned_data["lat"]
         long = cleaned_data["long"]
         if lat > 90 or lat < -90:
@@ -57,6 +63,10 @@ class DrawingUpdateForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        if "lat" not in cleaned_data:
+            raise ValidationError("Invalid Latitude entry", code="invalid_lat")
+        if "long" not in cleaned_data:
+            raise ValidationError("Invalid Longitude entry", code="invalid_long")
         lat = cleaned_data["lat"]
         long = cleaned_data["long"]
         if lat > 90 or lat < -90:
