@@ -1,6 +1,5 @@
 from django.core.exceptions import ValidationError
 from django.forms import CharField, FileInput, ModelForm, TextInput
-
 from djeocadengine.models import Drawing, Layer
 
 
