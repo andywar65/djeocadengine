@@ -131,8 +131,6 @@ class DrawingManualView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
             "type": "Point",
             "coordinates": [form.cleaned_data["long"], form.cleaned_data["lat"]],
         }
-        form.instance.lat = None
-        form.instance.long = None
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -207,8 +205,6 @@ class DrawingUpdateView(PermissionRequiredMixin, HxSetupMixin, UpdateView):
             "type": "Point",
             "coordinates": [form.cleaned_data["long"], form.cleaned_data["lat"]],
         }
-        form.instance.lat = None
-        form.instance.long = None
         return super().form_valid(form)
 
     def get_success_url(self):

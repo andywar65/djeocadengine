@@ -1,4 +1,12 @@
-from django.forms import CharField, FileInput, ModelForm, TextInput
+from django.forms import (
+    CharField,
+    FileInput,
+    FloatField,
+    ModelForm,
+    NumberInput,
+    TextInput,
+)
+from django.utils.translation import gettext_lazy as _
 
 from djeocadengine.models import Drawing, Layer
 
@@ -20,9 +28,16 @@ class DrawingParentForm(ModelForm):
 
 
 class DrawingManualForm(ModelForm):
+    lat = FloatField(
+        label=_("Latitude"), widget=NumberInput(attrs={"max": 90, "min": -90})
+    )
+    long = FloatField(
+        label=_("Longitude"), widget=NumberInput(attrs={"max": 180, "min": -180})
+    )
+
     class Meta:
         model = Drawing
-        fields = ["lat", "long", "designx", "designy", "rotation"]
+        fields = ["designx", "designy", "rotation"]
 
     class Media:
         # not used
@@ -44,14 +59,19 @@ class DrawingManualForm(ModelForm):
 
 
 class DrawingUpdateForm(ModelForm):
+    lat = FloatField(
+        label=_("Latitude"), widget=NumberInput(attrs={"max": 90, "min": -90})
+    )
+    long = FloatField(
+        label=_("Longitude"), widget=NumberInput(attrs={"max": 180, "min": -180})
+    )
+
     class Meta:
         model = Drawing
         fields = [
             "title",
             "dxf",
             "temp_image",
-            "lat",
-            "long",
             "designx",
             "designy",
             "rotation",
