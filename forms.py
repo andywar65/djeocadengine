@@ -7,7 +7,6 @@ from django.forms import (
     TextInput,
 )
 from django.utils.translation import gettext_lazy as _
-
 from djeocadengine.models import Drawing, Layer
 
 
